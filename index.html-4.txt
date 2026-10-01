@@ -1,0 +1,512 @@
+index.html-4
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casamento D'Ouro & Quintas - App Completo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            50: '#fbf8ee',
+                            100: '#f4ecd5',
+                            500: '#d4af37',
+                            600: '#b89728',
+                            700: '#947720',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between" x-data="weddingApp()">
+
+    <!-- TELA DE LOGIN / SEGURANÇA HOTMART -->
+    <div x-show="!isLoggedIn" class="fixed inset-0 z-50 bg-slate-900 flex items-center justify-center p-4" x-cloak>
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-center border border-gold-500/20">
+            <div class="inline-flex bg-gold-500/10 p-4 rounded-2xl text-gold-500 mb-2">
+                <i data-lucide="shield-check" class="w-10 h-10"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Acesso Restrito</h2>
+                <p class="text-slate-500 text-sm mt-1">Insira o e-mail cadastrado na compra da Hotmart para desbloquear o seu aplicativo.</p>
+            </div>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">E-mail da Compra</label>
+                    <input type="email" x-model="emailInput" placeholder="seu-email@exemplo.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+                <template x-if="loginError">
+                    <p class="text-xs text-rose-600 font-medium bg-rose-50 p-3 rounded-xl border border-rose-100" x-text="errorMessage"></p>
+                </template>
+                <button @click="handleLogin" class="w-full bg-gold-500 hover:bg-gold-600 text-slate-900 font-bold py-3.5 rounded-xl text-sm transition shadow-md flex items-center justify-center space-x-2">
+                    <span>Aceder à Aplicação</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <p class="text-[11px] text-slate-400">Proteção contra partilha de links e reembolso automático ativo.</p>
+        </div>
+    </div>
+
+    <!-- APLICAÇÃO PRINCIPAL -->
+    <div x-show="isLoggedIn" class="flex-1 flex flex-col bg-slate-50 min-h-screen pb-24" x-cloak>
+        
+        <!-- Header Fixo -->
+        <header class="bg-slate-900 text-white shadow-md sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gold-500 p-2 rounded-lg text-slate-900 font-bold flex items-center justify-center">
+                        <i data-lucide="crown" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base leading-tight">Casamento D'Ouro</h1>
+                        <p class="text-[10px] text-gold-400">Ecossistema Completo Mobile</p>
+                    </div>
+                </div>
+                <button @click="logout" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1 bg-slate-800 px-3 py-1.5 rounded-lg">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+
+            <!-- Menu de Abas (Horizontal Rolável) -->
+            <div class="bg-slate-800 border-t border-slate-700 overflow-x-auto whitespace-nowrap px-4 py-2.5 flex space-x-2">
+                <template x-for="tab in tabs" :key="tab.id">
+                    <button @click="activeTab = tab.id"
+                            :class="activeTab === tab.id ? 'bg-gold-500 text-slate-900 font-bold shadow' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'"
+                            class="px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1.5">
+                        <i :data-lucide="tab.icon" class="w-3.5 h-3.5"></i>
+                        <span x-text="tab.name"></span>
+                    </button>
+                </template>
+            </div>
+        </header>
+
+        <!-- Main Container de Conteúdo -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+
+            <!-- 1. DASHBOARD -->
+            <div x-show="activeTab === 'dashboard'" class="space-y-6" x-cloak>
+                <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                    <span class="bg-gold-500/20 text-gold-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-gold-500/30">Dashboard Geral</span>
+                    <h2 class="text-2xl font-bold mt-2">Visão Executiva do Evento</h2>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <span class="text-slate-500 text-xs font-medium">Orçamento Total</span>
+                        <p class="text-xl font-bold text-slate-900 mt-1" x-text="'€ ' + totalBudget"></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <span class="text-slate-500 text-xs font-medium">Confirmados (RSVP)</span>
+                        <p class="text-xl font-bold text-blue-600 mt-1" x-text="confirmedGuestsCount + ' pax'"></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <span class="text-slate-500 text-xs font-medium">Fornecedores</span>
+                        <p class="text-xl font-bold text-emerald-600 mt-1" x-text="suppliers.length"></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <span class="text-slate-500 text-xs font-medium">Tarefas Pendentes</span>
+                        <p class="text-xl font-bold text-amber-600 mt-1" x-text="tasks.filter(t => t.estado !== 'Concluída').length"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. CONFIGURAÇÃO -->
+            <div x-show="activeTab === 'config'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">Configuração do Casamento</h2>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3 text-xs">
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Noiva:</span> <input type="text" x-model="config.noiva" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Noivo:</span> <input type="text" x-model="config.noivo" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Data do Casamento:</span> <input type="text" x-model="config.data" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Local:</span> <input type="text" x-model="config.local" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between items-center"><span class="font-semibold text-slate-600">Orçamento Geral:</span> <input type="text" x-model="config.orcamento" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                </div>
+            </div>
+
+            <!-- 3. ORÇAMENTO -->
+            <div x-show="activeTab === 'orcamento'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Orçamento</h2>
+                    <button @click="addBudget" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Categoria</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(item, i) in budget" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="item.cat"></p>
+                                <p class="text-slate-500" x-text="'Planeado: € ' + item.val + ' | Comprometido: € ' + item.comp"></p>
+                            </div>
+                            <button @click="budget.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold p-1">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 4. FORNECEDORES -->
+            <div x-show="activeTab === 'fornecedores'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Fornecedores</h2>
+                    <button @click="addSupplier" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Fornecedor</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(f, i) in suppliers" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="f.nome"></p>
+                                <p class="text-slate-500" x-text="f.servico + ' | Contato: ' + f.contacto + ' | € ' + f.valor"></p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="px-2 py-0.5 rounded font-semibold bg-emerald-100 text-emerald-700" x-text="f.estado"></span>
+                                <button @click="suppliers.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold">×</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 5. PAGAMENTOS -->
+            <div x-show="activeTab === 'pagamentos'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Pagamentos & Prestações</h2>
+                    <button @click="addPayment" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Pagamento</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(p, i) in pagamentos" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="p.descricao"></p>
+                                <p class="text-slate-500" x-text="'Vencimento: ' + p.data + ' | € ' + p.valor + ' | ' + p.estado"></p>
+                            </div>
+                            <button @click="pagamentos.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 6. QUINTAS -->
+            <div x-show="activeTab === 'quintas'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Comparador de Quintas</h2>
+                    <button @click="addQuinta" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Quinta</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(q, i) in quintas" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="q.nome + ' (' + q.local + ')'"></p>
+                                <p class="text-slate-500" x-text="'Total: € ' + q.total + ' | Nota: ★ ' + q.nota"></p>
+                            </div>
+                            <button @click="quintas.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 7. CONVIDADOS -->
+            <div x-show="activeTab === 'convidados'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Convidados & RSVP</h2>
+                    <button @click="addGuest" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Convidado</button>
+                </div>
+                <div class="space-y-2">
+                    <template x-for="(g, i) in guests" :key="i">
+                        <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="g.nome"></p>
+                                <p class="text-slate-500" x-text="g.grupo + ' | Prato: ' + g.prato"></p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button @click="toggleRsvp(i)" class="px-2.5 py-1 rounded-full font-semibold transition"
+                                      :class="g.rsvp === 'Confirmado' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'"
+                                      x-text="g.rsvp">
+                                </button>
+                                <button @click="guests.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold">×</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 8. MESAS E MENU -->
+            <div x-show="activeTab === 'mesas'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Mesas e Menu</h2>
+                    <button @click="addMesa" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Mesa</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(m, i) in mesas" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="'Mesa: ' + m.nome"></p>
+                                <p class="text-slate-500" x-text="'Lugares: ' + m.lugares + ' | Estado: ' + m.estado"></p>
+                            </div>
+                            <button @click="mesas.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 9. AGENDA -->
+            <div x-show="activeTab === 'agenda'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Agenda de Tarefas</h2>
+                    <button @click="addTask" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Tarefa</button>
+                </div>
+                <div class="space-y-2">
+                    <template x-for="(t, i) in tasks" :key="i">
+                        <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" :checked="t.estado === 'Concluída'" @click="toggleTask(i)" class="w-4 h-4 text-gold-600 rounded">
+                                <div>
+                                    <p class="font-bold text-slate-900" x-text="t.tarefa" :class="t.estado === 'Concluída' ? 'line-through text-slate-400' : ''"></p>
+                                    <p class="text-slate-500" x-text="'Responsável: ' + t.resp"></p>
+                                </div>
+                            </div>
+                            <button @click="tasks.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 10. LUA DE MEL -->
+            <div x-show="activeTab === 'luademel'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Lua de Mel</h2>
+                    <button @click="addHoneymoonItem" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Despesa</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(h, i) in honeymoon" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="h.rubrica"></p>
+                                <p class="text-slate-500" x-text="'Estimado: € ' + h.estimado + ' | Gasto: € ' + h.real"></p>
+                            </div>
+                            <button @click="honeymoon.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 11. PRESENTES -->
+            <div x-show="activeTab === 'presentes'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Controlo de Presentes</h2>
+                    <button @click="addGift" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Presente</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(gift, i) in gifts" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="gift.convidado + ' - ' + gift.presente"></p>
+                                <p class="text-slate-500" x-text="'Valor: € ' + gift.valor + ' | Agradecido: ' + gift.agradecido"></p>
+                            </div>
+                            <button @click="gifts.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 12. INSPIRAÇÃO -->
+            <div x-show="activeTab === 'inspiracao'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Inspiração & Moodboard</h2>
+                    <button @click="addInspiration" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Inspiração</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(insp, i) in inspirations" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="insp.categoria + ': ' + insp.referencia"></p>
+                                <p class="text-slate-500" x-text="'Prioridade: ' + insp.prioridade"></p>
+                            </div>
+                            <button @click="inspirations.splice(i,1); saveData()" class="text-rose-500 hover:text-rose-700 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('weddingApp', () => ({
+                isLoggedIn: localStorage.getItem('wedding_auth') === 'true',
+                emailInput: '',
+                loginError: false,
+                errorMessage: '',
+                activeTab: 'dashboard',
+                
+                tabs: [
+                    { id: 'dashboard', name: 'Dashboard', icon: 'layout-dashboard' },
+                    { id: 'config', name: 'Configuração', icon: 'settings' },
+                    { id: 'orcamento', name: 'Orçamento', icon: 'wallet' },
+                    { id: 'fornecedores', name: 'Fornecedores', icon: 'briefcase' },
+                    { id: 'pagamentos', name: 'Pagamentos', icon: 'credit-card' },
+                    { id: 'quintas', name: 'Quintas', icon: 'castle' },
+                    { id: 'convidados', name: 'Convidados', icon: 'users' },
+                    { id: 'mesas', name: 'Mesas e Menu', icon: 'utensils' },
+                    { id: 'agenda', name: 'Agenda', icon: 'calendar-check' },
+                    { id: 'luademel', name: 'Lua de Mel', icon: 'plane' },
+                    { id: 'presentes', name: 'Presentes', icon: 'gift' },
+                    { id: 'inspiracao', name: 'Inspiração', icon: 'sparkles' }
+                ],
+                
+                config: JSON.parse(localStorage.getItem('w_config')) || { noiva: 'Inês', noivo: 'Tiago', data: '22/06/2027', local: 'Quinta das Oliveiras, Braga', orcamento: '20000' },
+                budget: JSON.parse(localStorage.getItem('w_budget')) || [
+                    { cat: 'Catering e bebidas', val: '12000', comp: '12000' },
+                    { cat: 'Fotografia e vídeo', val: '2500', comp: '2500' }
+                ],
+                suppliers: JSON.parse(localStorage.getItem('w_suppliers')) || [
+                    { nome: 'Luz Dourada', servico: 'Foto', contacto: '913000003', valor: '1480', estado: 'Contratado' }
+                ],
+                pagamentos: JSON.parse(localStorage.getItem('w_pagamentos')) || [
+                    { descricao: 'Pagamento final', valor: '2500', data: '08/06/2027', estado: 'Agendado' }
+                ],
+                quintas: JSON.parse(localStorage.getItem('w_quintas')) || [
+                    { nome: 'Quinta Vale Verde', local: 'Braga', total: '15607', nota: '4.7' }
+                ],
+                guests: JSON.parse(localStorage.getItem('w_guests')) || [
+                    { nome: 'Ana Silva', grupo: 'Família', rsvp: 'Confirmado', prato: 'Carne' }
+                ],
+                mesas: JSON.parse(localStorage.getItem('w_mesas')) || [
+                    { nome: 'Mesa 1', lugares: '10', estado: 'Vazia' }
+                ],
+                tasks: JSON.parse(localStorage.getItem('w_tasks')) || [
+                    { tarefa: 'Enviar convites', resp: 'Ambos', estado: 'Em curso' }
+                ],
+                honeymoon: JSON.parse(localStorage.getItem('w_honeymoon')) || [
+                    { rubrica: 'Voos', estimado: '1440', real: '0' }
+                ],
+                gifts: JSON.parse(localStorage.getItem('w_gifts')) || [
+                    { convidado: 'Joana Ferreira', presente: 'Robô de cozinha', valor: '250', agradecido: 'Não' }
+                ],
+                inspirations: JSON.parse(localStorage.getItem('w_inspirations')) || [
+                    { categoria: 'Paleta', referencia: 'Marfim e dourado', prioridade: 'Alta' }
+                ],
+
+                get totalBudget() {
+                    return this.budget.reduce((acc, curr) => acc + Number(curr.val || 0), 0).toLocaleString();
+                },
+                get confirmedGuestsCount() {
+                    return this.guests.filter(g => g.rsvp === 'Confirmado').length;
+                },
+
+                saveData() {
+                    localStorage.setItem('w_config', JSON.stringify(this.config));
+                    localStorage.setItem('w_budget', JSON.stringify(this.budget));
+                    localStorage.setItem('w_suppliers', JSON.stringify(this.suppliers));
+                    localStorage.setItem('w_pagamentos', JSON.stringify(this.pagamentos));
+                    localStorage.setItem('w_quintas', JSON.stringify(this.quintas));
+                    localStorage.setItem('w_guests', JSON.stringify(this.guests));
+                    localStorage.setItem('w_mesas', JSON.stringify(this.mesas));
+                    localStorage.setItem('w_tasks', JSON.stringify(this.tasks));
+                    localStorage.setItem('w_honeymoon', JSON.stringify(this.honeymoon));
+                    localStorage.setItem('w_gifts', JSON.stringify(this.gifts));
+                    localStorage.setItem('w_inspirations', JSON.stringify(this.inspirations));
+                },
+
+                handleLogin() {
+                    if(!this.emailInput || !this.emailInput.includes('@')) {
+                        this.loginError = true;
+                        this.errorMessage = 'Por favor, insira um e-mail válido.';
+                        return;
+                    }
+                    localStorage.setItem('wedding_auth', 'true');
+                    this.isLoggedIn = true;
+                    this.loginError = false;
+                    setTimeout(() => { lucide.createIcons(); }, 100);
+                },
+                logout() {
+                    localStorage.removeItem('wedding_auth');
+                    this.isLoggedIn = false;
+                    this.emailInput = '';
+                },
+                addBudget() {
+                    let cat = prompt('Nome da Categoria:');
+                    let val = prompt('Valor (€):');
+                    if(cat) { this.budget.push({ cat, val: val || '0', comp: val || '0' }); this.saveData(); }
+                },
+                addSupplier() {
+                    let nome = prompt('Nome do Fornecedor:');
+                    let servico = prompt('Serviço:');
+                    let valor = prompt('Valor (€):');
+                    if(nome) { this.suppliers.push({ nome, servico: servico || 'Geral', contacto: '910000000', valor: valor || '0', estado: 'Contratado' }); this.saveData(); }
+                },
+                addPayment() {
+                    let desc = prompt('Descrição:');
+                    let val = prompt('Valor (€):');
+                    if(desc) { this.pagamentos.push({ descricao: desc, valor: val || '0', data: '2027-06-01', estado: 'Agendado' }); this.saveData(); }
+                },
+                addQuinta() {
+                    let nome = prompt('Nome da Quinta:');
+                    let local = prompt('Localidade:');
+                    let total = prompt('Total (€):');
+                    if(nome) { this.quintas.push({ nome, local: local || 'Portugal', total: total || '15000', nota: '4.5' }); this.saveData(); }
+                },
+                addGuest() {
+                    let nome = prompt('Nome do Convidado:');
+                    let grupo = prompt('Grupo:');
+                    if(nome) { this.guests.push({ nome, grupo: grupo || 'Geral', rsvp: 'Pendente', prato: 'Carne' }); this.saveData(); }
+                },
+                toggleRsvp(index) {
+                    const states = ['Confirmado', 'Pendente', 'Recusado'];
+                    let current = states.indexOf(this.guests[index].rsvp);
+                    this.guests[index].rsvp = states[(current + 1) % states.length];
+                    this.saveData();
+                },
+                addMesa() {
+                    let nome = prompt('Identificação da Mesa:');
+                    if(nome) { this.mesas.push({ nome, lugares: '10', estado: 'Vazia' }); this.saveData(); }
+                },
+                addTask() {
+                    let tarefa = prompt('Descrição da Tarefa:');
+                    let resp = prompt('Responsável:');
+                    if(tarefa) { this.tasks.push({ tarefa, resp: resp || 'Ambos', estado: 'Por iniciar' }); this.saveData(); }
+                },
+                toggleTask(index) {
+                    this.tasks[index].estado = this.tasks[index].estado === 'Concluída' ? 'Por iniciar' : 'Concluída';
+                    this.saveData();
+                },
+                addHoneymoonItem() {
+                    let rubrica = prompt('Rubrica (Ex: Passeios):');
+                    let estimado = prompt('Valor Estimado (€):');
+                    if(rubrica) { this.honeymoon.push({ rubrica, estimado: estimado || '0', real: '0' }); this.saveData(); }
+                },
+                addGift() {
+                    let convidado = prompt('Nome do Convidado:');
+                    let presente = prompt('Presente:');
+                    let valor = prompt('Valor (€):');
+                    if(convidado) { this.gifts.push({ convidado, presente: presente || 'Outro', valor: valor || '0', agradecido: 'Não' }); this.saveData(); }
+                },
+                addInspiration() {
+                    let categoria = prompt('Categoria (Ex: Decoração):');
+                    let referencia = prompt('Referência:');
+                    if(categoria) { this.inspirations.push({ categoria, referencia: referencia || 'Detalhes', prioridade: 'Alta' }); this.saveData(); }
+                }
+            }))
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => { lucide.createIcons(); }, 100);
+        });
+        document.addEventListener('alpine:updated', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
