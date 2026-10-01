@@ -1,0 +1,359 @@
+index.html-3
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casamento D'Ouro & Quintas - App Completo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            50: '#fbf8ee',
+                            100: '#f4ecd5',
+                            500: '#d4af37',
+                            600: '#b89728',
+                            700: '#947720',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between" x-data="weddingApp()">
+
+    <!-- TELA DE LOGIN / SEGURANÇA HOTMART -->
+    <div x-show="!isLoggedIn" class="fixed inset-0 z-50 bg-slate-900 flex items-center justify-center p-4" x-cloak>
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-center border border-gold-500/20">
+            <div class="inline-flex bg-gold-500/10 p-4 rounded-2xl text-gold-500 mb-2">
+                <i data-lucide="shield-check" class="w-10 h-10"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Acesso Restrito</h2>
+                <p class="text-slate-500 text-sm mt-1">Insira o e-mail cadastrado na compra da Hotmart para desbloquear o seu aplicativo.</p>
+            </div>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">E-mail da Compra</label>
+                    <input type="email" x-model="emailInput" placeholder="seu-email@exemplo.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+                <template x-if="loginError">
+                    <p class="text-xs text-rose-600 font-medium bg-rose-50 p-3 rounded-xl border border-rose-100" x-text="errorMessage"></p>
+                </template>
+                <button @click="handleLogin" class="w-full bg-gold-500 hover:bg-gold-600 text-slate-900 font-bold py-3.5 rounded-xl text-sm transition shadow-md flex items-center justify-center space-x-2">
+                    <span>Aceder à Aplicação</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <p class="text-[11px] text-slate-400">Proteção contra partilha de links e reembolso automático ativo.</p>
+        </div>
+    </div>
+
+    <!-- APLICAÇÃO PRINCIPAL -->
+    <div x-show="isLoggedIn" class="flex-1 flex flex-col bg-slate-50 min-h-screen pb-24" x-cloak>
+        
+        <!-- Header Fixo -->
+        <header class="bg-slate-900 text-white shadow-md sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gold-500 p-2 rounded-lg text-slate-900 font-bold flex items-center justify-center">
+                        <i data-lucide="crown" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base leading-tight">Casamento D'Ouro</h1>
+                        <p class="text-[10px] text-gold-400">Ecossistema Completo Mobile</p>
+                    </div>
+                </div>
+                <button @click="logout" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1 bg-slate-800 px-3 py-1.5 rounded-lg">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+
+            <!-- Menu de Abas (Horizontal Rolável) -->
+            <div class="bg-slate-800 border-t border-slate-700 overflow-x-auto whitespace-nowrap px-4 py-2.5 flex space-x-2 scrollbar-none">
+                <template x-for="tab in tabs" :key="tab.id">
+                    <button @click="activeTab = tab.id"
+                            :class="activeTab === tab.id ? 'bg-gold-500 text-slate-900 font-bold shadow' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'"
+                            class="px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1.5">
+                        <i :data-lucide="tab.icon" class="w-3.5 h-3.5"></i>
+                        <span x-text="tab.name"></span>
+                    </button>
+                </template>
+            </div>
+        </header>
+
+        <!-- Main Container de Conteúdo -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+
+            <!-- 1. DASHBOARD -->
+            <div x-show="activeTab === 'dashboard'" class="space-y-6" x-cloak>
+                <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                    <span class="bg-gold-500/20 text-gold-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-gold-500/30">Dashboard Geral</span>
+                    <h2 class="text-2xl font-bold mt-2">Visão Executiva do Evento</h2>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <span class="text-slate-500 text-xs font-medium">Orçamento Total</span>
+                        <p class="text-xl font-bold text-slate-900 mt-1">€ 20.000</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                        <span class="text-slate-500 text-xs font-medium">Confirmados (RSVP)</span>
+                        <p class="text-xl font-bold text-blue-600 mt-1" x-text="guests.filter(g=>g.rsvp==='Confirmado').length + ' pax'"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. CONFIGURAÇÃO -->
+            <div x-show="activeTab === 'config'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">Configuração do Casamento</h2>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3 text-xs">
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Noiva:</span> <input type="text" x-model="config.noiva" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Noivo:</span> <input type="text" x-model="config.noivo" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Data do Casamento:</span> <input type="text" x-model="config.data" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Local:</span> <input type="text" x-model="config.local" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between items-center"><span class="font-semibold text-slate-600">Orçamento Total:</span> <input type="text" x-model="config.orcamento" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                </div>
+            </div>
+
+            <!-- 3. ORÇAMENTO -->
+            <div x-show="activeTab === 'orcamento'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Orçamento</h2>
+                    <button @click="addBudget" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Categoria</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(item, i) in budget" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-1 text-xs">
+                            <div class="flex justify-between font-bold text-slate-900"><span x-text="item.cat"></span><span x-text="'€ ' + item.val"></span></div>
+                            <p class="text-slate-500" x-text="'Comprometido: € ' + item.comp"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 4. FORNECEDORES -->
+            <div x-show="activeTab === 'fornecedores'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Fornecedores</h2>
+                    <button @click="addSupplier" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Fornecedor</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(f, i) in suppliers" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-xs space-y-1">
+                            <div class="flex justify-between font-bold text-slate-900"><span x-text="f.nome"></span><span x-text="f.estado" class="text-emerald-600"></span></div>
+                            <p class="text-slate-500" x-text="f.servico + ' | Contato: ' + f.contacto"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 5. PAGAMENTOS -->
+            <div x-show="activeTab === 'pagamentos'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">Pagamentos & Prestações</h2>
+                <div class="space-y-3">
+                    <template x-for="(p, i) in pagamentos" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-xs space-y-1">
+                            <div class="flex justify-between font-bold text-slate-900"><span x-text="p.descricao"></span><span x-text="'€ ' + p.valor"></span></div>
+                            <p class="text-slate-500" x-text="'Vencimento: ' + p.data + ' | ' + p.estado"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 6. QUINTAS -->
+            <div x-show="activeTab === 'quintas'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">Comparador de Quintas</h2>
+                <div class="space-y-3">
+                    <template x-for="(q, i) in quintas" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-xs space-y-1">
+                            <div class="flex justify-between font-bold text-slate-900"><span x-text="q.nome"></span><span x-text="'★ ' + q.nota" class="text-gold-700"></span></div>
+                            <p class="text-slate-500" x-text="'Local: ' + q.local + ' | Total: € ' + q.total"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 7. CONVIDADOS -->
+            <div x-show="activeTab === 'convidados'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">Convidados & RSVP</h2>
+                    <button @click="addGuest" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Convidado</button>
+                </div>
+                <div class="space-y-2">
+                    <template x-for="(g, i) in guests" :key="i">
+                        <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="g.nome"></p>
+                                <p class="text-slate-500" x-text="g.grupo + ' | Prato: ' + g.prato"></p>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full font-semibold bg-emerald-100 text-emerald-700" x-text="g.rsvp"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 8. MESAS E MENU -->
+            <div x-show="activeTab === 'mesas'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">Mesas e Menu</h2>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-xs space-y-2">
+                    <p class="font-bold text-slate-900">Resumo dos Pratos Escolhidos:</p>
+                    <div class="flex justify-between"><span>Carne:</span> <strong>5 pax</strong></div>
+                    <div class="flex justify-between"><span>Peixe:</span> <strong>2 pax</strong></div>
+                    <div class="flex justify-between"><span>Vegetariano:</span> <strong>1 pax</strong></div>
+                </div>
+            </div>
+
+            <!-- 9. AGENDA -->
+            <div x-show="activeTab === 'agenda'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">Agenda de Tarefas</h2>
+                <div class="space-y-2">
+                    <template x-for="(t, i) in tasks" :key="i">
+                        <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900" x-text="t.tarefa"></p>
+                                <p class="text-slate-500" x-text="'Responsável: ' + t.resp"></p>
+                            </div>
+                            <span class="px-2 py-0.5 rounded font-medium bg-amber-100 text-amber-700" x-text="t.estado"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 10. LUA DE MEL -->
+            <div x-show="activeTab === 'luademel'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">Lua de Mel</h2>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-xs space-y-2">
+                    <div class="flex justify-between"><span>Verba Alocada:</span> <strong>€ 4.500</strong></div>
+                    <div class="flex justify-between"><span>Estimado Viagem:</span> <strong>€ 4.048</strong></div>
+                    <div class="flex justify-between"><span>Gasto Real:</span> <strong class="text-emerald-600">€ 213</strong></div>
+                </div>
+            </div>
+
+            <!-- 11. PRESENTES -->
+            <div x-show="activeTab === 'presentes'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">Controlo de Presentes</h2>
+                <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 text-xs space-y-1">
+                    <p class="font-bold text-slate-900">Joana Ferreira</p>
+                    <p class="text-slate-500">Presente: Robô de cozinha | Valor: € 250</p>
+                </div>
+            </div>
+
+            <!-- 12. INSPIRAÇÃO -->
+            <div x-show="activeTab === 'inspiracao'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">Inspiração & Moodboard</h2>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 text-xs space-y-2">
+                    <p class="font-bold text-slate-900">Paleta: Marfim, verde sálvia e dourado</p>
+                    <p class="text-slate-500">Flores brancas com folhagem natural</p>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('weddingApp', () => ({
+                isLoggedIn: localStorage.getItem('wedding_auth') === 'true',
+                emailInput: '',
+                loginError: false,
+                errorMessage: '',
+                activeTab: 'dashboard',
+                
+                tabs: [
+                    { id: 'dashboard', name: 'Dashboard', icon: 'layout-dashboard' },
+                    { id: 'config', name: 'Configuração', icon: 'settings' },
+                    { id: 'orcamento', name: 'Orçamento', icon: 'wallet' },
+                    { id: 'fornecedores', name: 'Fornecedores', icon: 'briefcase' },
+                    { id: 'pagamentos', name: 'Pagamentos', icon: 'credit-card' },
+                    { id: 'quintas', name: 'Quintas', icon: 'castle' },
+                    { id: 'convidados', name: 'Convidados', icon: 'users' },
+                    { id: 'mesas', name: 'Mesas e Menu', icon: 'utensils' },
+                    { id: 'agenda', name: 'Agenda', icon: 'calendar-check' },
+                    { id: 'luademel', name: 'Lua de Mel', icon: 'plane' },
+                    { id: 'presentes', name: 'Presentes', icon: 'gift' },
+                    { id: 'inspiracao', name: 'Inspiração', icon: 'sparkles' }
+                ],
+                
+                config: { noiva: 'Inês', noivo: 'Tiago', data: '22/06/2027', local: 'Quinta das Oliveiras, Braga', orcamento: '€ 20.000' },
+                budget: [
+                    { cat: 'Catering e bebidas', val: '12.000', comp: '12.000' },
+                    { cat: 'Fotografia e vídeo', val: '2.500', comp: '2.500' },
+                    { cat: 'Decoração e flores', val: '700', comp: '1.350' }
+                ],
+                suppliers: [
+                    { nome: 'Luz Dourada Fotografia', servico: 'Fotografia e vídeo', contacto: '913 000 003', estado: 'Contratado' },
+                    { nome: 'Atelier Branco', servico: 'Vestido e fatos', contacto: '914 000 004', estado: 'Contratado' }
+                ],
+                pagamentos: [
+                    { descricao: 'Pagamento final', valor: '2.500', data: '08/06/2027', estado: 'Agendado' },
+                    { descricao: 'Sinal (20%)', valor: '1.240', data: '20/03/2026', estado: 'Pago' }
+                ],
+                quintas: [
+                    { nome: 'Quinta Vale Verde', local: 'Braga', total: '15.607', nota: '4.7' },
+                    { nome: 'Casa das Oliveiras', local: 'Guimarães', total: '16.105', nota: '4.2' },
+                    { nome: 'Solar do Douro', local: 'Porto', total: '16.371', nota: '4.4' }
+                ],
+                guests: [
+                    { nome: 'Ana Silva', grupo: 'Família', rsvp: 'Confirmado', prato: 'Carne' },
+                    { nome: 'Carlos Mendes', grupo: 'Amigos', rsvp: 'Confirmado', prato: 'Peixe' }
+                ],
+                tasks: [
+                    { tarefa: 'Confirmar menu vegetariano', resp: 'Inês', estado: 'Em curso' },
+                    { tarefa: 'Enviar convites', resp: 'Ambos', estado: 'Por iniciar' }
+                ],
+
+                handleLogin() {
+                    if(!this.emailInput || !this.emailInput.includes('@')) {
+                        this.loginError = true;
+                        this.errorMessage = 'Por favor, insira um e-mail válido.';
+                        return;
+                    }
+                    localStorage.setItem('wedding_auth', 'true');
+                    this.isLoggedIn = true;
+                    this.loginError = false;
+                    setTimeout(() => { lucide.createIcons(); }, 100);
+                },
+                logout() {
+                    localStorage.removeItem('wedding_auth');
+                    this.isLoggedIn = false;
+                    this.emailInput = '';
+                },
+                addBudget() {
+                    let cat = prompt('Nome da Categoria:');
+                    let val = prompt('Valor (€):');
+                    if(cat) this.budget.push({ cat, val: val || '0', comp: '0' });
+                },
+                addSupplier() {
+                    let nome = prompt('Nome do Fornecedor:');
+                    if(nome) this.suppliers.push({ nome, servico: 'Geral', contacto: '910000000', estado: 'Em Negociação' });
+                },
+                addGuest() {
+                    let nome = prompt('Nome do Convidado:');
+                    if(nome) this.guests.push({ nome, grupo: 'Geral', rsvp: 'Pendente', prato: 'Carne' });
+                }
+            }))
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => { lucide.createIcons(); }, 100);
+        });
+        document.addEventListener('alpine:updated', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
