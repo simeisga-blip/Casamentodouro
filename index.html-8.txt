@@ -1,0 +1,637 @@
+index.html-8
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casamento D'Ouro & Quintas - App Pro</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            50: '#fbf8ee',
+                            100: '#f4ecd5',
+                            500: '#d4af37',
+                            600: '#b89728',
+                            700: '#947720',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-900 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between" x-data="weddingApp()">
+
+    <!-- TELA DE LOGIN / SEGURANÇA HOTMART -->
+    <div x-show="!isLoggedIn" class="fixed inset-0 z-50 bg-slate-900 flex items-center justify-center p-4" x-cloak>
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-center border border-gold-500/20">
+            <div class="inline-flex bg-gold-500/10 p-4 rounded-2xl text-gold-500 mb-2">
+                <i data-lucide="shield-check" class="w-10 h-10"></i>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Acesso Restrito</h2>
+                <p class="text-slate-500 text-sm mt-1">Insira o e-mail cadastrado na compra da Hotmart para desbloquear o seu aplicativo.</p>
+            </div>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">E-mail da Compra</label>
+                    <input type="email" x-model="emailInput" placeholder="seu-email@exemplo.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gold-500">
+                </div>
+                <template x-if="loginError">
+                    <p class="text-xs text-rose-600 font-medium bg-rose-50 p-3 rounded-xl border border-rose-100" x-text="errorMessage"></p>
+                </template>
+                <button @click="handleLogin" class="w-full bg-gold-500 hover:bg-gold-600 text-slate-900 font-bold py-3.5 rounded-xl text-sm transition shadow-md flex items-center justify-center space-x-2">
+                    <span>Aceder à Aplicação</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <p class="text-[11px] text-slate-400">Proteção contra partilha de links e reembolso automático ativo.</p>
+        </div>
+    </div>
+
+    <!-- APLICAÇÃO PRINCIPAL -->
+    <div x-show="isLoggedIn" class="flex-1 flex flex-col bg-slate-50 min-h-screen pb-24" x-cloak>
+        
+        <!-- Header Fixo -->
+        <header class="bg-slate-900 text-white shadow-md sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gold-500 p-2 rounded-lg text-slate-900 font-bold flex items-center justify-center">
+                        <i data-lucide="crown" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base leading-tight">Casamento D'Ouro</h1>
+                        <p class="text-[10px] text-gold-400">Edição Visual & Interativa</p>
+                    </div>
+                </div>
+                <button @click="logout" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1 bg-slate-800 px-3 py-1.5 rounded-lg">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+
+            <!-- Menu de Abas com Emojis -->
+            <div class="bg-slate-800 border-t border-slate-700 overflow-x-auto whitespace-nowrap px-4 py-2.5 flex space-x-2">
+                <template x-for="tab in tabs" :key="tab.id">
+                    <button @click="activeTab = tab.id"
+                            :class="activeTab === tab.id ? 'bg-gold-500 text-slate-900 font-bold shadow' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'"
+                            class="px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1.5">
+                        <span x-text="tab.emoji"></span>
+                        <span x-text="tab.name"></span>
+                    </button>
+                </template>
+            </div>
+        </header>
+
+        <!-- Main Container -->
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
+
+            <!-- 1. DASHBOARD -->
+            <div x-show="activeTab === 'dashboard'" class="space-y-6" x-cloak>
+                <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                    <span class="bg-gold-500/20 text-gold-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-gold-500/30">📊 Dashboard Geral</span>
+                    <h2 class="text-2xl font-bold mt-2">Visão Executiva do Evento</h2>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                    <h3 class="font-bold text-slate-900 text-sm">🎨 Indicadores de Progresso do Evento</h3>
+                    <div class="space-y-3 text-xs">
+                        <div>
+                            <div class="flex justify-between font-semibold mb-1">
+                                <span class="text-slate-600">Confirmação de Convidados (RSVP)</span>
+                                <span class="text-blue-600" x-text="confirmedGuestsCount + ' / ' + guests.length + ' pax'"></span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                                <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" :style="'width: ' + (guests.length ? (confirmedGuestsCount / guests.length) * 100 : 0) + '%'"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between font-semibold mb-1">
+                                <span class="text-slate-600">Tarefas Concluídas na Agenda</span>
+                                <span class="text-emerald-600" x-text="tasks.filter(t => t.estado === 'Concluída').length + ' / ' + tasks.length"></span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                                <div class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" :style="'width: ' + (tasks.length ? (tasks.filter(t => t.estado === 'Concluída').length / tasks.length) * 100 : 0) + '%'"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-1">
+                        <span class="text-slate-500 text-xs font-medium">💰 Orçamento Total</span>
+                        <p class="text-xl font-bold text-slate-900" x-text="'€ ' + totalBudget"></p>
+                        <p class="text-[10px] text-slate-400 italic">Origem: Aba Orçamento</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-1">
+                        <span class="text-slate-500 text-xs font-medium">👥 Confirmados (RSVP)</span>
+                        <p class="text-xl font-bold text-blue-600" x-text="confirmedGuestsCount + ' pax'"></p>
+                        <p class="text-[10px] text-slate-400 italic">Origem: Aba Convidados</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-1">
+                        <span class="text-slate-500 text-xs font-medium">🤝 Fornecedores</span>
+                        <p class="text-xl font-bold text-emerald-600" x-text="suppliers.length"></p>
+                        <p class="text-[10px] text-slate-400 italic">Origem: Aba Fornecedores</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-1">
+                        <span class="text-slate-500 text-xs font-medium">📋 Tarefas Pendentes</span>
+                        <p class="text-xl font-bold text-amber-600" x-text="tasks.filter(t => t.estado !== 'Concluída').length"></p>
+                        <p class="text-[10px] text-slate-400 italic">Origem: Aba Agenda</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. CONFIGURAÇÃO -->
+            <div x-show="activeTab === 'config'" class="space-y-4" x-cloak>
+                <h2 class="text-xl font-bold text-slate-900">⚙️ Configuração do Casamento</h2>
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3 text-xs">
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Noiva:</span> <input type="text" x-model="config.noiva" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Noivo:</span> <input type="text" x-model="config.noivo" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Data do Casamento:</span> <input type="text" x-model="config.data" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Local:</span> <input type="text" x-model="config.local" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
+                </div>
+            </div>
+
+            <!-- 3. ORÇAMENTO -->
+            <div x-show="activeTab === 'orcamento'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">💰 Orçamento</h2>
+                    <button @click="addBudget" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Categoria</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(item, i) in budget" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="item.cat"></p>
+                                <p class="text-slate-500" x-text="'Planeado: € ' + item.val"></p>
+                            </div>
+                            <button @click="budget.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 4. FORNECEDORES -->
+            <div x-show="activeTab === 'fornecedores'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">🤝 Fornecedores</h2>
+                    <button @click="addSupplier" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Fornecedor</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(f, i) in suppliers" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="f.nome"></p>
+                                <p class="text-slate-500" x-text="f.servico + ' | Tel: ' + f.contacto + ' | € ' + f.valor"></p>
+                            </div>
+                            <button @click="suppliers.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 5. PAGAMENTOS -->
+            <div x-show="activeTab === 'pagamentos'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">💳 Pagamentos</h2>
+                    <button @click="addPayment" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Pagamento</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(p, i) in pagamentos" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="p.descricao"></p>
+                                <p class="text-slate-500" x-text="'Vencimento: ' + p.data + ' | € ' + p.valor + ' | ' + p.estado"></p>
+                            </div>
+                            <button @click="pagamentos.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 6. QUINTAS COM MAPA REAL DO GOOGLE MAPS -->
+            <div x-show="activeTab === 'quintas'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">🏰 Comparador de Quintas</h2>
+                    <button @click="addQuinta" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Quinta</button>
+                </div>
+                <div class="space-y-4">
+                    <template x-for="(q, i) in quintas" :key="i">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden text-xs">
+                            <!-- Mapa interativo embutido do endereço exato -->
+                            <div class="w-full h-36 bg-slate-100 relative">
+                                <iframe 
+                                    class="w-full h-full border-0 pointer-events-none"
+                                    :src="'https://maps.google.com/maps?q=' + encodeURIComponent(q.local) + '&t=&z=14&ie=UTF8&iwloc=&output=embed'" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-bold text-slate-900 text-sm" x-text="q.nome"></p>
+                                        <p class="text-slate-500 flex items-center space-x-1 mt-0.5">
+                                            <span>📍</span>
+                                            <strong class="text-slate-700" x-text="q.local"></strong>
+                                        </p>
+                                    </div>
+                                    <button @click="quintas.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
+                                </div>
+                                <div class="pt-2 border-t border-slate-100 flex justify-between text-slate-600">
+                                    <span>Total Estimado: <strong class="text-gold-700" x-text="'€ ' + q.total"></strong></span>
+                                    <span>Avaliação: <strong class="text-slate-800" x-text="'★ ' + q.nota"></strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 7. CONVIDADOS COM EMOJIS NO PRATO -->
+            <div x-show="activeTab === 'convidados'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">👥 Convidados & RSVP</h2>
+                    <button @click="addGuest" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Convidado</button>
+                </div>
+                <div class="space-y-2">
+                    <template x-for="(g, i) in guests" :key="i">
+                        <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="g.nome"></p>
+                                <p class="text-slate-500" x-text="g.grupo + ' | Prato: ' + getDishEmoji(g.prato) + ' ' + g.prato"></p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button @click="toggleRsvp(i)" class="px-2.5 py-1 rounded-full font-semibold transition"
+                                      :class="g.rsvp === 'Confirmado' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'"
+                                      x-text="g.rsvp">
+                                </button>
+                                <button @click="guests.splice(i,1); saveData()" class="text-rose-500 font-bold">×</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 8. MESAS E MENU (COM PRATO AUTOMÁTICO DO CONVIDADO) -->
+            <div x-show="activeTab === 'mesas'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">🍽️️ Mesas & Menu Visual</h2>
+                    <button @click="addMesa" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Mesa</button>
+                </div>
+                <div class="space-y-4">
+                    <template x-for="(m, i) in mesas" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3 text-xs">
+                            <div class="flex justify-between items-center border-b pb-2">
+                                <div>
+                                    <p class="font-bold text-slate-900 text-sm" x-text="m.nome"></p>
+                                    <p class="text-slate-500" x-text="'Capacidade: ' + m.lugares + ' lugares'"></p>
+                                </div>
+                                <button @click="mesas.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-600 mb-2">Mapa de Lugares da Mesa:</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <template x-for="seatNum in Number(m.lugares)">
+                                        <div @click="assignSeat(i, seatNum)" class="bg-gold-50 border border-gold-300 p-2.5 rounded-xl cursor-pointer hover:bg-gold-100 transition shadow-2xs flex justify-between items-center">
+                                            <div>
+                                                <span class="block text-[10px] text-gold-700 font-bold" x-text="'Lugar ' + seatNum"></span>
+                                                <span class="block text-[12px] font-medium text-slate-900" x-text="m.assentos[seatNum] || 'Vago (Clique para alocar)'"></span>
+                                            </div>
+                                            <span class="text-sm font-bold" x-text="getGuestDishEmoji(m.assentos[seatNum])"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 9. AGENDA -->
+            <div x-show="activeTab === 'agenda'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">📋 Agenda de Tarefas</h2>
+                    <button @click="addTask" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Tarefa</button>
+                </div>
+                <div class="space-y-2">
+                    <template x-for="(t, i) in tasks" :key="i">
+                        <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" :checked="t.estado === 'Concluída'" @click="toggleTask(i)" class="w-4 h-4 text-gold-600 rounded">
+                                <div>
+                                    <p class="font-bold text-slate-900" x-text="t.tarefa" :class="t.estado === 'Concluída' ? 'line-through text-slate-400' : ''"></p>
+                                    <p class="text-slate-500" x-text="'Responsável: ' + t.resp"></p>
+                                </div>
+                            </div>
+                            <button @click="tasks.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 10. LUA DE MEL (COM MAPA REAL DO GOOGLE MAPS) -->
+            <div x-show="activeTab === 'luademel'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">✈️ Lua de Mel</h2>
+                    <button @click="addHoneymoonItem" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Destino / Despesa</button>
+                </div>
+                <div class="space-y-4">
+                    <template x-for="(h, i) in honeymoon" :key="i">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden text-xs">
+                            <div class="w-full h-32 bg-slate-100 relative">
+                                <iframe 
+                                    class="w-full h-full border-0 pointer-events-none"
+                                    :src="'https://maps.google.com/maps?q=' + encodeURIComponent(h.local) + '&t=&z=14&ie=UTF8&iwloc=&output=embed'" 
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                            <div class="p-4 space-y-2">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-bold text-slate-900 text-sm" x-text="h.rubrica"></p>
+                                        <p class="text-slate-500 flex items-center space-x-1 mt-0.5">
+                                            <span>📍</span>
+                                            <strong class="text-slate-700" x-text="h.local"></strong>
+                                        </p>
+                                    </div>
+                                    <button @click="honeymoon.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
+                                </div>
+                                <div class="pt-2 border-t border-slate-100 flex justify-between text-slate-600">
+                                    <span>Estimado: <strong class="text-slate-900" x-text="'€ ' + h.estimado"></strong></span>
+                                    <span>Gasto Real: <strong class="text-emerald-600" x-text="'€ ' + h.real"></strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 11. PRESENTES -->
+            <div x-show="activeTab === 'presentes'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">🎁 Controlo de Presentes</h2>
+                    <button @click="addGift" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Presente</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(gift, i) in gifts" :key="i">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm" x-text="gift.convidado + ' - ' + gift.presente"></p>
+                                <p class="text-slate-500" x-text="'Valor: € ' + gift.valor + ' | Agradecido: ' + gift.agradecido"></p>
+                            </div>
+                            <button @click="gifts.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- 12. INSPIRAÇÃO (COM BUSCA INTELIGENTE PRECISA) -->
+            <div x-show="activeTab === 'inspiracao'" class="space-y-4" x-cloak>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-slate-900">✨ Inspiração & Moodboard</h2>
+                    <button @click="addInspiration" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Inspiração</button>
+                </div>
+                <div class="space-y-3">
+                    <template x-for="(insp, i) in inspirations" :key="i">
+                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden text-xs">
+                            <img :src="getSmartImage(insp.categoria, insp.referencia)" alt="Inspiração" class="w-full h-36 object-cover">
+                            <div class="p-4 flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold text-slate-900 text-sm" x-text="insp.categoria + ': ' + insp.referencia"></p>
+                                    <p class="text-slate-500" x-text="'Prioridade: ' + insp.prioridade"></p>
+                                </div>
+                                <button @click="inspirations.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('weddingApp', () => ({
+                isLoggedIn: localStorage.getItem('wedding_auth') === 'true',
+                emailInput: '',
+                loginError: false,
+                errorMessage: '',
+                activeTab: 'dashboard',
+                
+                tabs: [
+                    { id: 'dashboard', name: 'Dashboard', emoji: '📊' },
+                    { id: 'config', name: 'Configuração', emoji: '⚙️' },
+                    { id: 'orcamento', name: 'Orçamento', emoji: '💰' },
+                    { id: 'fornecedores', name: 'Fornecedores', emoji: '🤝' },
+                    { id: 'pagamentos', name: 'Pagamentos', emoji: '💳' },
+                    { id: 'quintas', name: 'Quintas', emoji: '🏰' },
+                    { id: 'convidados', name: 'Convidados', emoji: '👥' },
+                    { id: 'mesas', name: 'Mesas e Menu', emoji: '🍽️' },
+                    { id: 'agenda', name: 'Agenda', emoji: '📋' },
+                    { id: 'luademel', name: 'Lua de Mel', emoji: '✈️' },
+                    { id: 'presentes', name: 'Presentes', emoji: '🎁' },
+                    { id: 'inspiracao', name: 'Inspiração', emoji: '✨' }
+                ],
+                
+                config: JSON.parse(localStorage.getItem('w_config')) || { noiva: 'Inês', noivo: 'Tiago', data: '22/06/2027', local: 'Quinta das Oliveiras, Braga' },
+                budget: JSON.parse(localStorage.getItem('w_budget')) || [],
+                suppliers: JSON.parse(localStorage.getItem('w_suppliers')) || [],
+                pagamentos: JSON.parse(localStorage.getItem('w_pagamentos')) || [],
+                quintas: JSON.parse(localStorage.getItem('w_quintas')) || [
+                    { nome: 'Quinta Vale Verde', local: 'Braga, Portugal', total: '15607', nota: '4.7' }
+                ],
+                guests: JSON.parse(localStorage.getItem('w_guests')) || [],
+                mesas: JSON.parse(localStorage.getItem('w_mesas')) || [
+                    { nome: 'Mesa Principal', lugares: 6, assentos: {} }
+                ],
+                tasks: JSON.parse(localStorage.getItem('w_tasks')) || [],
+                honeymoon: JSON.parse(localStorage.getItem('w_honeymoon')) || [
+                    { rubrica: 'Resort Maldivas', local: 'Atol de Ari Sul, Maldivas', estimado: '3500', real: '2100' }
+                ],
+                gifts: JSON.parse(localStorage.getItem('w_gifts')) || [],
+                inspirations: JSON.parse(localStorage.getItem('w_inspirations')) || [
+                    { categoria: 'Vestido', referencia: 'Vermelho com amarelo', prioridade: 'Alta' }
+                ],
+
+                get totalBudget() {
+                    return this.budget.reduce((acc, curr) => acc + Number(curr.val || 0), 0).toLocaleString();
+                },
+                get confirmedGuestsCount() {
+                    return this.guests.filter(g => g.rsvp === 'Confirmado').length;
+                },
+
+                getDishEmoji(prato) {
+                    let p = (prato || '').toLowerCase();
+                    if(p.includes('carne')) return '🥩';
+                    if(p.includes('peixe')) return '🐟';
+                    if(p.includes('vegetariano') || p.includes('veggie')) return '🥗';
+                    if(p.includes('infantil') || p.includes('criança')) return '👶';
+                    return '🍽️';
+                },
+
+                getGuestDishEmoji(guestName) {
+                    if(!guestName) return '';
+                    let found = this.guests.find(g => g.nome.toLowerCase() === guestName.toLowerCase());
+                    if(found) {
+                        return this.getDishEmoji(found.prato);
+                    }
+                    return '👤';
+                },
+
+                getSmartImage(cat, ref) {
+                    let text = (cat + ' ' + ref).toLowerCase();
+                    if(text.includes('vestido') || text.includes('noiva')) {
+                        return 'https://images.unsplash.com/photo-1594552072238-b8a3272be66f?w=500&auto=format&fit=crop&q=60';
+                    }
+                    if(text.includes('vermelho') || text.includes('amarelo') || text.includes('cor')) {
+                        return 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop&q=60';
+                    }
+                    if(text.includes('aliança') || text.includes('anel') || text.includes('joia')) {
+                        return 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500&auto=format&fit=crop&q=60';
+                    }
+                    if(text.includes('flor') || text.includes('bouquet') || text.includes('decoração')) {
+                        return 'https://images.unsplash.com/photo-1519741497674-611481863552?w=500&auto=format&fit=crop&q=60';
+                    }
+                    if(text.includes('bolo') || text.includes('doce')) {
+                        return 'https://images.unsplash.com/photo-1535141192574-5d4897c13136?w=500&auto=format&fit=crop&q=60';
+                    }
+                    return 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500&auto=format&fit=crop&q=60';
+                },
+
+                saveData() {
+                    localStorage.setItem('w_config', JSON.stringify(this.config));
+                    localStorage.setItem('w_budget', JSON.stringify(this.budget));
+                    localStorage.setItem('w_suppliers', JSON.stringify(this.suppliers));
+                    localStorage.setItem('w_pagamentos', JSON.stringify(this.pagamentos));
+                    localStorage.setItem('w_quintas', JSON.stringify(this.quintas));
+                    localStorage.setItem('w_guests', JSON.stringify(this.guests));
+                    localStorage.setItem('w_mesas', JSON.stringify(this.mesas));
+                    localStorage.setItem('w_tasks', JSON.stringify(this.tasks));
+                    localStorage.setItem('w_honeymoon', JSON.stringify(this.honeymoon));
+                    localStorage.setItem('w_gifts', JSON.stringify(this.gifts));
+                    localStorage.setItem('w_inspirations', JSON.stringify(this.inspirations));
+                },
+
+                handleLogin() {
+                    if(!this.emailInput || !this.emailInput.includes('@')) {
+                        this.loginError = true;
+                        this.errorMessage = 'Insira um e-mail válido.';
+                        return;
+                    }
+                    localStorage.setItem('wedding_auth', 'true');
+                    this.isLoggedIn = true;
+                    this.loginError = false;
+                    setTimeout(() => { lucide.createIcons(); }, 100);
+                },
+                logout() {
+                    localStorage.removeItem('wedding_auth');
+                    this.isLoggedIn = false;
+                    this.emailInput = '';
+                },
+                addBudget() {
+                    let cat = prompt('Nome da Categoria:');
+                    let val = prompt('Valor Planeado (€):');
+                    if(cat) { this.budget.push({ cat, val: val || '0' }); this.saveData(); }
+                },
+                addSupplier() {
+                    let nome = prompt('Nome do Fornecedor:');
+                    let servico = prompt('Serviço prestado:');
+                    let contacto = prompt('Contacto (Telefone):');
+                    let valor = prompt('Valor (€):');
+                    if(nome) { this.suppliers.push({ nome, servico: servico || 'Geral', contacto: contacto || 'N/A', valor: valor || '0', estado: 'Contratado' }); this.saveData(); }
+                },
+                addPayment() {
+                    let desc = prompt('Descrição do Pagamento:');
+                    let val = prompt('Valor (€):');
+                    let data = prompt('Data Prevista (DD/MM/AAAA):');
+                    let estado = prompt('Estado (Agendado / Pago):');
+                    if(desc) { this.pagamentos.push({ descricao: desc, valor: val || '0', data: data || '01/06/2027', estado: estado || 'Agendado' }); this.saveData(); }
+                },
+                addQuinta() {
+                    let nome = prompt('Nome da Quinta:');
+                    let local = prompt('Endereço Exato ou Cidade (Ex: Av. dos Aliados, Porto):');
+                    let total = prompt('Total (€):');
+                    let nota = prompt('Nota (Ex: 4.8):');
+                    if(nome) { this.quintas.push({ nome, local: local || 'Endereço não informado', total: total || '15000', nota: nota || '4.5' }); this.saveData(); }
+                },
+                addGuest() {
+                    let nome = prompt('Nome do Convidado:');
+                    let grupo = prompt('Grupo (Ex: Família):');
+                    let prato = prompt('Prato (Carne, Peixe, Vegetariano, Infantil):');
+                    if(nome) { this.guests.push({ nome, grupo: grupo || 'Geral', rsvp: 'Pendente', prato: prato || 'Carne' }); this.saveData(); }
+                },
+                toggleRsvp(index) {
+                    const states = ['Confirmado', 'Pendente', 'Recusado'];
+                    let current = states.indexOf(this.guests[index].rsvp);
+                    this.guests[index].rsvp = states[(current + 1) % states.length];
+                    this.saveData();
+                },
+                addMesa() {
+                    let nome = prompt('Nome da Mesa:');
+                    let lugares = prompt('Número de Lugares (Ex: 4, 6, 8):');
+                    if(nome) { this.mesas.push({ nome, lugares: Number(lugares) || 6, assentos: {} }); this.saveData(); }
+                },
+                assignSeat(mesaIndex, seatNum) {
+                    let nomeConvidado = prompt(`Nome do convidado para o Lugar ${seatNum}:`);
+                    if(nomeConvidado !== null) {
+                        if(nomeConvidado.trim() === '') {
+                            delete this.mesas[mesaIndex].assentos[seatNum];
+                        } else {
+                            this.mesas[mesaIndex].assentos[seatNum] = nomeConvidado;
+                        }
+                        this.saveData();
+                    }
+                },
+                addTask() {
+                    let tarefa = prompt('Descrição da Tarefa:');
+                    let resp = prompt('Responsável:');
+                    if(tarefa) { this.tasks.push({ tarefa, resp: resp || 'Ambos', estado: 'Por iniciar' }); this.saveData(); }
+                },
+                toggleTask(index) {
+                    this.tasks[index].estado = this.tasks[index].estado === 'Concluída' ? 'Por iniciar' : 'Concluída';
+                    this.saveData();
+                },
+                addHoneymoonItem() {
+                    let rubrica = prompt('Destino ou Despesa:');
+                    let local = prompt('Endereço ou Local Exato (Ex: Ilhas Maurício):');
+                    let estimado = prompt('Valor Estimado (€):');
+                    let real = prompt('Gasto Real (€):');
+                    if(rubrica) { this.honeymoon.push({ rubrica, local: local || 'Local a definir', estimado: estimado || '0', real: real || '0' }); this.saveData(); }
+                },
+                addGift() {
+                    let convidado = prompt('Convidado:');
+                    let presente = prompt('Presente:');
+                    let valor = prompt('Valor (€):');
+                    if(convidado) { this.gifts.push({ convidado, presente: presente || 'Outro', valor: valor || '0', agradecido: 'Não' }); this.saveData(); }
+                },
+                addInspiration() {
+                    let categoria = prompt('Categoria (Ex: Vestido, Decoração):');
+                    let referencia = prompt('Detalhes / Referência (Ex: Vestido amarelo e preto):');
+                    if(categoria) { this.inspirations.push({ categoria, referencia, prioridade: 'Alta' }); this.saveData(); }
+                }
+            }))
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => { lucide.createIcons(); }, 100);
+        });
+        document.addEventListener('alpine:updated', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
