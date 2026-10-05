@@ -1,637 +1,954 @@
-index.html-8
-
-<!DOCTYPE html>
-<html lang="pt">
+<!doctype html>
+<html lang="pt-PT">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casamento D'Ouro & Quintas - App Pro</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            50: '#fbf8ee',
-                            100: '#f4ecd5',
-                            500: '#d4af37',
-                            600: '#b89728',
-                            700: '#947720',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>O Casamento D'Ouro | Comparador de Quintas para Portugal</title>
+  <meta name="description" content="Compare quintas, propostas, custos escondidos, clausulas e visitas antes de fechar contrato. Folha de calculo pronta para noivas em Portugal.">
+  <style>
+    :root {
+      --bg: #f8f6f0;
+      --paper: #ffffff;
+      --ink: #20211f;
+      --muted: #62655f;
+      --line: #ddd7c9;
+      --green: #12312a;
+      --green-2: #1d4a3d;
+      --gold: #d0ad54;
+      --gold-2: #f2dfaa;
+      --soft: #ece7da;
+      --danger: #8b2e2e;
+      --shadow: 0 20px 50px rgba(18, 49, 42, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img,
+    video {
+      display: block;
+      max-width: 100%;
+    }
+
+    .topbar {
+      background: var(--green);
+      color: #fff;
+      font-size: 0.9rem;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(248, 246, 240, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav-inner {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 2px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand span:first-child {
+      font-size: 1.05rem;
+    }
+
+    .brand span:last-child {
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--gold);
+      color: #1a1711;
+      padding: 15px 22px;
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 12px 28px rgba(208, 173, 84, 0.28);
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: #dcb95f;
+      box-shadow: 0 16px 34px rgba(208, 173, 84, 0.34);
+    }
+
+    .btn.secondary {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(18, 49, 42, 0.18);
+    }
+
+    .btn.full {
+      width: 100%;
+    }
+
+    .section {
+      padding: 78px 0;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      padding: 56px 0 80px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.78), rgba(248,246,240,1)),
+        radial-gradient(circle at 86% 8%, rgba(208, 173, 84, 0.18), transparent 32%);
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.75fr);
+      gap: 44px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.7);
+      color: var(--green);
+      font-size: 0.84rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.06;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin-top: 18px;
+      font-size: clamp(2.35rem, 6vw, 5.2rem);
+      color: var(--ink);
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+    }
+
+    h3 {
+      font-size: 1.25rem;
+    }
+
+    .lead {
+      max-width: 720px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .microcopy {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .proof-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+      color: var(--green);
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .proof-row span {
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+    }
+
+    .video-shell {
+      position: relative;
+      max-width: 390px;
+      margin: 0 auto;
+      border: 10px solid #171915;
+      border-radius: 34px;
+      background: #171915;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      aspect-ratio: 9 / 16;
+    }
+
+    .video-shell video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #111;
+    }
+
+    .video-note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .strip {
+      background: var(--green);
+      color: #fff;
+      padding: 24px 0;
+    }
+
+    .strip-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .strip-item {
+      border-left: 1px solid rgba(255,255,255,0.18);
+      padding-left: 18px;
+    }
+
+    .strip-item strong {
+      display: block;
+      font-size: 1.08rem;
+    }
+
+    .strip-item span {
+      display: block;
+      margin-top: 4px;
+      color: rgba(255,255,255,0.76);
+      font-size: 0.92rem;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 46px;
+      align-items: start;
+    }
+
+    .section-kicker {
+      margin-bottom: 12px;
+      color: var(--green);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 0.84rem;
+    }
+
+    .section-text {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 1.07rem;
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: var(--muted);
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: var(--green);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 900;
+    }
+
+    .warning {
+      border: 1px solid rgba(139, 46, 46, 0.22);
+      background: rgba(139, 46, 46, 0.055);
+      color: #3f2422;
+      padding: 18px;
+      border-radius: var(--radius);
+      font-weight: 750;
+    }
+
+    .tool-preview {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .sheet-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px;
+      background: var(--green);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .sheet-tabs {
+      display: flex;
+      gap: 8px;
+      overflow: auto;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f3efe4;
+    }
+
+    .sheet-tabs span {
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--green);
+      font-size: 0.8rem;
+      font-weight: 800;
+      border: 1px solid var(--line);
+    }
+
+    .fake-sheet {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .fake-sheet th,
+    .fake-sheet td {
+      border: 1px solid #e5dfd2;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .fake-sheet th {
+      background: #f0eadf;
+      color: var(--green);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .fake-sheet td {
+      color: var(--muted);
+      background: #fff;
+    }
+
+    .score {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 32px;
+    }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 16px 38px rgba(32, 33, 31, 0.06);
+    }
+
+    .card small {
+      color: var(--green);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .card h3 {
+      margin-top: 10px;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin: 10px 0 0;
+    }
+
+    .bonus {
+      background: #fff;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bonus-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .bonus-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bonus-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding: 13px 0;
+      color: var(--muted);
+    }
+
+    .bonus-item strong {
+      color: var(--ink);
+    }
+
+    .offer {
+      background:
+        linear-gradient(180deg, rgba(18,49,42,0.96), rgba(18,49,42,1)),
+        var(--green);
+      color: #fff;
+    }
+
+    .offer-box {
+      max-width: 760px;
+      margin: 34px auto 0;
+      background: #fff;
+      color: var(--ink);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.22);
+    }
+
+    .offer-box h3 {
+      font-size: 1.55rem;
+    }
+
+    .price-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      gap: 10px;
+      margin: 18px 0 10px;
+    }
+
+    .price {
+      color: var(--green);
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 950;
+      line-height: 0.95;
+    }
+
+    .price-note {
+      color: var(--muted);
+      font-weight: 800;
+      padding-bottom: 8px;
+    }
+
+    .included {
+      margin: 22px 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .included li {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 9px;
+      color: var(--muted);
+    }
+
+    .guarantee {
+      margin-top: 16px;
+      padding: 14px;
+      background: #f4efe3;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--green);
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .faq {
+      display: grid;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+      padding: 18px 20px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    details p {
+      margin: 12px 0 0;
+      color: var(--muted);
+    }
+
+    .footer {
+      padding: 34px 0;
+      background: #111915;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.86rem;
+    }
+
+    .footer strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .sticky-cta {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      display: none;
+      padding: 10px 14px;
+      background: rgba(248,246,240,0.94);
+      border-top: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    @media (max-width: 900px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero-grid,
+      .split,
+      .bonus-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .hero-grid {
+        gap: 30px;
+      }
+
+      .strip-grid,
+      .cards {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding-bottom: 76px;
+      }
+
+      .section {
+        padding: 58px 0;
+      }
+
+      .container,
+      .nav-inner {
+        width: min(100% - 24px, 1120px);
+      }
+
+      .hero-actions .btn,
+      .hero-actions {
+        width: 100%;
+      }
+
+      .proof-row span {
+        width: 100%;
+      }
+
+      .strip-grid,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .strip-item {
+        border-left: 0;
+        border-top: 1px solid rgba(255,255,255,0.16);
+        padding: 14px 0 0;
+      }
+
+      .offer-box {
+        padding: 20px;
+      }
+
+      .fake-sheet {
+        font-size: 0.78rem;
+      }
+
+      .fake-sheet th,
+      .fake-sheet td {
+        padding: 8px;
+      }
+
+      .sticky-cta {
+        display: block;
+      }
+    }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between" x-data="weddingApp()">
+<body>
+  <div class="topbar">Oferta de lançamento para Portugal: acesso imediato ao Comparador de Quintas + Sistema completo</div>
 
-    <!-- TELA DE LOGIN / SEGURANÇA HOTMART -->
-    <div x-show="!isLoggedIn" class="fixed inset-0 z-50 bg-slate-900 flex items-center justify-center p-4" x-cloak>
-        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-center border border-gold-500/20">
-            <div class="inline-flex bg-gold-500/10 p-4 rounded-2xl text-gold-500 mb-2">
-                <i data-lucide="shield-check" class="w-10 h-10"></i>
-            </div>
-            <div>
-                <h2 class="text-2xl font-bold text-slate-900">Acesso Restrito</h2>
-                <p class="text-slate-500 text-sm mt-1">Insira o e-mail cadastrado na compra da Hotmart para desbloquear o seu aplicativo.</p>
-            </div>
-            
-            <div class="space-y-4 text-left">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">E-mail da Compra</label>
-                    <input type="email" x-model="emailInput" placeholder="seu-email@exemplo.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gold-500">
-                </div>
-                <template x-if="loginError">
-                    <p class="text-xs text-rose-600 font-medium bg-rose-50 p-3 rounded-xl border border-rose-100" x-text="errorMessage"></p>
-                </template>
-                <button @click="handleLogin" class="w-full bg-gold-500 hover:bg-gold-600 text-slate-900 font-bold py-3.5 rounded-xl text-sm transition shadow-md flex items-center justify-center space-x-2">
-                    <span>Aceder à Aplicação</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
-            </div>
-            <p class="text-[11px] text-slate-400">Proteção contra partilha de links e reembolso automático ativo.</p>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="O Casamento D'Ouro">
+        <span>O Casamento D'Ouro</span>
+        <span>Planeamento simples para noivas em Portugal</span>
+      </a>
+      <nav class="nav-links" aria-label="Navegação principal">
+        <a href="#recebe">O que recebe</a>
+        <a href="#bonus">Sistema completo</a>
+        <a href="#preco">Preço</a>
+        <a class="btn" href="https://pay.hotmart.com/P107638148Y?checkoutMode=10">Aceder agora</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Folha pronta para escolher a quinta com segurança</div>
+          <h1>Compare quintas, propostas e custos escondidos antes de fechar contrato.</h1>
+          <p class="lead">
+            O Comparador de Quintas D'Ouro organiza valores, menus, visitas, cláusulas e notas de cada fornecedor numa folha simples de usar no telemóvel ou computador.
+          </p>
+          <div class="hero-actions">
+            <a class="btn" href="https://pay.hotmart.com/P107638148Y?checkoutMode=10">Quero o Comparador por 17,90€</a>
+            <span class="microcopy">Pagamento único. Sem mensalidade.</span>
+          </div>
+          <div class="proof-row" aria-label="Informações rápidas">
+            <span>Google Sheets e Excel</span>
+            <span>MB WAY, Multibanco e cartão</span>
+            <span>Garantia de 15 dias</span>
+          </div>
         </div>
+
+        <div>
+          <div class="video-shell" aria-label="Demonstração do Comparador de Quintas">
+            <video controls playsinline preload="metadata">
+              <source src="H4B1C1.mp4" type="video/mp4">
+              <source src="H4B1C1.mov" type="video/quicktime">
+              O seu navegador não conseguiu reproduzir o vídeo.
+            </video>
+          </div>
+          <p class="video-note">Veja a folha real por dentro antes de comprar.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="strip" aria-label="Resumo do produto">
+      <div class="container strip-grid">
+        <div class="strip-item">
+          <strong>Compare propostas</strong>
+          <span>Coloque lado a lado quintas, menus e condições.</span>
+        </div>
+        <div class="strip-item">
+          <strong>Veja o custo real</strong>
+          <span>Não fique presa apenas ao preço por pessoa.</span>
+        </div>
+        <div class="strip-item">
+          <strong>Proteja o contrato</strong>
+          <span>Confira cláusulas, extras e taxas antes de assinar.</span>
+        </div>
+        <div class="strip-item">
+          <strong>Decida com calma</strong>
+          <span>Use notas, pesos e visitas para escolher melhor.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container split">
+        <div>
+          <p class="section-kicker">O problema real</p>
+          <h2>A quinta mais bonita pode não ser a melhor proposta.</h2>
+          <p class="section-text">
+            Em Portugal, muitas noivas comparam quintas pelo valor do menu e só depois percebem extras de decoração, taxa de rolha, horários, animação, convidados mínimos e condições de pagamento.
+          </p>
+        </div>
+        <div class="warning">
+          Se não comparar tudo no mesmo lugar, uma proposta aparentemente barata pode ficar mais cara do que outra que parecia acima do orçamento.
+        </div>
+      </div>
+    </section>
+
+    <section id="recebe" class="section">
+      <div class="container">
+        <p class="section-kicker">O que recebe imediatamente</p>
+        <h2>O Comparador de Quintas D'Ouro.</h2>
+        <p class="section-text">
+          Uma folha prática para transformar propostas soltas em uma decisão clara. Preenche uma vez, compara tudo lado a lado e sabe onde negociar.
+        </p>
+
+        <div class="tool-preview" aria-label="Prévia visual da folha de cálculo">
+          <div class="sheet-top">
+            <span>Comparador de Quintas</span>
+            <span>Plano Básico</span>
+          </div>
+          <div class="sheet-tabs" aria-label="Separadores incluídos">
+            <span>Comparador</span>
+            <span>Propostas</span>
+            <span>Incluído</span>
+            <span>Cláusulas</span>
+            <span>Avaliação</span>
+            <span>Visitas</span>
+          </div>
+          <table class="fake-sheet">
+            <thead>
+              <tr>
+                <th>Quinta</th>
+                <th>Custo estimado</th>
+                <th>Incluído</th>
+                <th>Cláusulas</th>
+                <th>Nota final</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Quinta Vale Verde</td>
+                <td>15 607€</td>
+                <td>Menu + espaço</td>
+                <td>Rever taxa de rolha</td>
+                <td class="score">4,7</td>
+              </tr>
+              <tr>
+                <td>Casa das Oliveiras</td>
+                <td>16 105€</td>
+                <td>Menu + decoração base</td>
+                <td>Confirmar hora extra</td>
+                <td class="score">4,4</td>
+              </tr>
+              <tr>
+                <td>Solar do Douro</td>
+                <td>17 350€</td>
+                <td>Menu + copo d'água</td>
+                <td>Negociar sinal</td>
+                <td class="score">4,8</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <small>01</small>
+            <h3>Propostas organizadas</h3>
+            <p>Registe valores, convidados, disponibilidade, sinais, menus e condições de cada quinta.</p>
+          </article>
+          <article class="card">
+            <small>02</small>
+            <h3>Cláusulas a exigir</h3>
+            <p>Veja o que precisa confirmar antes de assinar: rolha, decoração, horas extra, cancelamento e serviços externos.</p>
+          </article>
+          <article class="card">
+            <small>03</small>
+            <h3>Avaliação com pesos</h3>
+            <p>Dê pesos a preço, localização, estrutura, menu, flexibilidade e atendimento para decidir com menos emoção.</p>
+          </article>
+          <article class="card">
+            <small>04</small>
+            <h3>Visitas e degustações</h3>
+            <p>Planeie chamadas, visitas, degustações e tarefas com quem vai participar na decisão.</p>
+          </article>
+          <article class="card">
+            <small>05</small>
+            <h3>Custo real estimado</h3>
+            <p>Não veja só o menu. Compare o custo total provável de cada opção antes de dar o sinal.</p>
+          </article>
+          <article class="card">
+            <small>06</small>
+            <h3>Pronto para telemóvel</h3>
+            <p>Use no Google Sheets, no Excel ou no computador. Sem instalar aplicação complicada.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="bonus" class="section bonus">
+      <div class="container split">
+        <div>
+          <p class="section-kicker">Bónus de lançamento</p>
+          <h2>Recebe também o Sistema Casamento D'Ouro completo.</h2>
+          <p class="section-text">
+            Além do Comparador de Quintas, recebe a estrutura completa para organizar orçamento, fornecedores, convidados, mesas, pagamentos e lua de mel.
+          </p>
+          <div class="hero-actions">
+            <a class="btn secondary" href="https://pay.hotmart.com/P107638148Y?checkoutMode=10">Garantir acesso completo</a>
+          </div>
+        </div>
+        <div class="bonus-list">
+          <div class="bonus-item"><strong>Dashboard</strong><span>visão geral</span></div>
+          <div class="bonus-item"><strong>Orçamento</strong><span>limites e gastos</span></div>
+          <div class="bonus-item"><strong>Fornecedores</strong><span>contactos e estado</span></div>
+          <div class="bonus-item"><strong>Pagamentos</strong><span>sinais e parcelas</span></div>
+          <div class="bonus-item"><strong>Convidados</strong><span>RSVP e restrições</span></div>
+          <div class="bonus-item"><strong>Mesas e Menu</strong><span>distribuição do copo-d'água</span></div>
+          <div class="bonus-item"><strong>Agenda</strong><span>tarefas e prazos</span></div>
+          <div class="bonus-item"><strong>Lua de Mel</strong><span>planeamento e verba</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="preco" class="section offer">
+      <div class="container">
+        <p class="section-kicker" style="color: var(--gold-2); text-align: center;">Acesso imediato</p>
+        <h2 style="text-align: center;">Comece pela decisão que mais pesa no orçamento: a quinta.</h2>
+        <p class="section-text" style="color: rgba(255,255,255,0.78); text-align: center; max-width: 760px; margin-left: auto; margin-right: auto;">
+          Por menos do que uma prova extra de menu, recebe uma ferramenta para comparar propostas com calma antes de comprometer milhares de euros.
+        </p>
+
+        <div class="offer-box">
+          <h3>Acesso completo de lançamento</h3>
+          <div class="price-line">
+            <div class="price">17,90€</div>
+            <div class="price-note">pagamento único</div>
+          </div>
+          <ul class="included">
+            <li><span class="check">✓</span><span>Comparador de Quintas D'Ouro com propostas, cláusulas, avaliação e visitas.</span></li>
+            <li><span class="check">✓</span><span>Sistema Casamento D'Ouro completo com orçamento, convidados, fornecedores e agenda.</span></li>
+            <li><span class="check">✓</span><span>Acesso imediato por e-mail após a confirmação da compra.</span></li>
+            <li><span class="check">✓</span><span>Uso no telemóvel ou computador, em Google Sheets ou Excel.</span></li>
+            <li><span class="check">✓</span><span>Atualizações incluídas durante a fase de lançamento.</span></li>
+          </ul>
+          <a class="btn full" href="https://pay.hotmart.com/P107638148Y?checkoutMode=10">Quero aceder agora por 17,90€</a>
+          <div class="guarantee">Garantia de 15 dias. Se não ajudar a organizar melhor as propostas, pode pedir reembolso.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <p class="section-kicker">Perguntas frequentes</p>
+        <h2>Antes de aceder.</h2>
+        <div class="faq">
+          <details>
+            <summary>Preciso saber mexer muito em Excel?</summary>
+            <p>Não. A folha foi pensada para preencher campos simples, escolher opções e comparar o resultado. Também pode abrir no Google Sheets.</p>
+          </details>
+          <details>
+            <summary>Funciona para qualquer região de Portugal?</summary>
+            <p>Sim. Pode usar com quintas, restaurantes, herdades, hotéis, espaços no Douro, Minho, Lisboa, Algarve ou qualquer outra região.</p>
+          </details>
+          <details>
+            <summary>Já tenho quinta quase escolhida. Ainda serve?</summary>
+            <p>Serve. Use para rever cláusulas, custos escondidos, sinais, condições de pagamento e confirmar se a proposta continua a fazer sentido.</p>
+          </details>
+          <details>
+            <summary>Como recebo o acesso?</summary>
+            <p>Depois da compra, recebe o acesso no e-mail usado no pagamento. O link protegido desbloqueia o material com esse mesmo e-mail.</p>
+          </details>
+          <details>
+            <summary>Posso pedir reembolso?</summary>
+            <p>Sim. Tem 15 dias de garantia conforme as condições da plataforma de pagamento.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="sticky-cta">
+    <a class="btn full" href="https://pay.hotmart.com/P107638148Y?checkoutMode=10">Aceder por 17,90€</a>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <strong>O Casamento D'Ouro</strong>
+      <span>Ferramentas digitais de organização para casamentos em Portugal. Este site não é afiliado à Meta, Apple, Google, Excel ou WhatsApp. Compra processada pela Hotmart. © <span id="year"></span> Todos os direitos reservados.</span>
     </div>
+  </footer>
 
-    <!-- APLICAÇÃO PRINCIPAL -->
-    <div x-show="isLoggedIn" class="flex-1 flex flex-col bg-slate-50 min-h-screen pb-24" x-cloak>
-        
-        <!-- Header Fixo -->
-        <header class="bg-slate-900 text-white shadow-md sticky top-0 z-40">
-            <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-gold-500 p-2 rounded-lg text-slate-900 font-bold flex items-center justify-center">
-                        <i data-lucide="crown" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-base leading-tight">Casamento D'Ouro</h1>
-                        <p class="text-[10px] text-gold-400">Edição Visual & Interativa</p>
-                    </div>
-                </div>
-                <button @click="logout" class="text-xs text-slate-400 hover:text-white flex items-center space-x-1 bg-slate-800 px-3 py-1.5 rounded-lg">
-                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-                    <span>Sair</span>
-                </button>
-            </div>
-
-            <!-- Menu de Abas com Emojis -->
-            <div class="bg-slate-800 border-t border-slate-700 overflow-x-auto whitespace-nowrap px-4 py-2.5 flex space-x-2">
-                <template x-for="tab in tabs" :key="tab.id">
-                    <button @click="activeTab = tab.id"
-                            :class="activeTab === tab.id ? 'bg-gold-500 text-slate-900 font-bold shadow' : 'bg-slate-700 text-slate-300 hover:bg-slate-600'"
-                            class="px-3 py-1.5 rounded-xl text-xs transition flex items-center space-x-1.5">
-                        <span x-text="tab.emoji"></span>
-                        <span x-text="tab.name"></span>
-                    </button>
-                </template>
-            </div>
-        </header>
-
-        <!-- Main Container -->
-        <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 space-y-6">
-
-            <!-- 1. DASHBOARD -->
-            <div x-show="activeTab === 'dashboard'" class="space-y-6" x-cloak>
-                <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
-                    <span class="bg-gold-500/20 text-gold-400 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-gold-500/30">📊 Dashboard Geral</span>
-                    <h2 class="text-2xl font-bold mt-2">Visão Executiva do Evento</h2>
-                </div>
-
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-                    <h3 class="font-bold text-slate-900 text-sm">🎨 Indicadores de Progresso do Evento</h3>
-                    <div class="space-y-3 text-xs">
-                        <div>
-                            <div class="flex justify-between font-semibold mb-1">
-                                <span class="text-slate-600">Confirmação de Convidados (RSVP)</span>
-                                <span class="text-blue-600" x-text="confirmedGuestsCount + ' / ' + guests.length + ' pax'"></span>
-                            </div>
-                            <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                                <div class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" :style="'width: ' + (guests.length ? (confirmedGuestsCount / guests.length) * 100 : 0) + '%'"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between font-semibold mb-1">
-                                <span class="text-slate-600">Tarefas Concluídas na Agenda</span>
-                                <span class="text-emerald-600" x-text="tasks.filter(t => t.estado === 'Concluída').length + ' / ' + tasks.length"></span>
-                            </div>
-                            <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-                                <div class="bg-emerald-500 h-2.5 rounded-full transition-all duration-500" :style="'width: ' + (tasks.length ? (tasks.filter(t => t.estado === 'Concluída').length / tasks.length) * 100 : 0) + '%'"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-1">
-                        <span class="text-slate-500 text-xs font-medium">💰 Orçamento Total</span>
-                        <p class="text-xl font-bold text-slate-900" x-text="'€ ' + totalBudget"></p>
-                        <p class="text-[10px] text-slate-400 italic">Origem: Aba Orçamento</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-1">
-                        <span class="text-slate-500 text-xs font-medium">👥 Confirmados (RSVP)</span>
-                        <p class="text-xl font-bold text-blue-600" x-text="confirmedGuestsCount + ' pax'"></p>
-                        <p class="text-[10px] text-slate-400 italic">Origem: Aba Convidados</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-1">
-                        <span class="text-slate-500 text-xs font-medium">🤝 Fornecedores</span>
-                        <p class="text-xl font-bold text-emerald-600" x-text="suppliers.length"></p>
-                        <p class="text-[10px] text-slate-400 italic">Origem: Aba Fornecedores</p>
-                    </div>
-                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-1">
-                        <span class="text-slate-500 text-xs font-medium">📋 Tarefas Pendentes</span>
-                        <p class="text-xl font-bold text-amber-600" x-text="tasks.filter(t => t.estado !== 'Concluída').length"></p>
-                        <p class="text-[10px] text-slate-400 italic">Origem: Aba Agenda</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. CONFIGURAÇÃO -->
-            <div x-show="activeTab === 'config'" class="space-y-4" x-cloak>
-                <h2 class="text-xl font-bold text-slate-900">⚙️ Configuração do Casamento</h2>
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3 text-xs">
-                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Noiva:</span> <input type="text" x-model="config.noiva" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
-                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Noivo:</span> <input type="text" x-model="config.noivo" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
-                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Data do Casamento:</span> <input type="text" x-model="config.data" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
-                    <div class="flex justify-between border-b pb-2 items-center"><span class="font-semibold text-slate-600">Local:</span> <input type="text" x-model="config.local" @input="saveData" class="border rounded px-2 py-1 text-right bg-slate-50"></div>
-                </div>
-            </div>
-
-            <!-- 3. ORÇAMENTO -->
-            <div x-show="activeTab === 'orcamento'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">💰 Orçamento</h2>
-                    <button @click="addBudget" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Categoria</button>
-                </div>
-                <div class="space-y-3">
-                    <template x-for="(item, i) in budget" :key="i">
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
-                            <div>
-                                <p class="font-bold text-slate-900 text-sm" x-text="item.cat"></p>
-                                <p class="text-slate-500" x-text="'Planeado: € ' + item.val"></p>
-                            </div>
-                            <button @click="budget.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- 4. FORNECEDORES -->
-            <div x-show="activeTab === 'fornecedores'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">🤝 Fornecedores</h2>
-                    <button @click="addSupplier" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Fornecedor</button>
-                </div>
-                <div class="space-y-3">
-                    <template x-for="(f, i) in suppliers" :key="i">
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
-                            <div>
-                                <p class="font-bold text-slate-900 text-sm" x-text="f.nome"></p>
-                                <p class="text-slate-500" x-text="f.servico + ' | Tel: ' + f.contacto + ' | € ' + f.valor"></p>
-                            </div>
-                            <button @click="suppliers.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- 5. PAGAMENTOS -->
-            <div x-show="activeTab === 'pagamentos'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">💳 Pagamentos</h2>
-                    <button @click="addPayment" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Pagamento</button>
-                </div>
-                <div class="space-y-3">
-                    <template x-for="(p, i) in pagamentos" :key="i">
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
-                            <div>
-                                <p class="font-bold text-slate-900 text-sm" x-text="p.descricao"></p>
-                                <p class="text-slate-500" x-text="'Vencimento: ' + p.data + ' | € ' + p.valor + ' | ' + p.estado"></p>
-                            </div>
-                            <button @click="pagamentos.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- 6. QUINTAS COM MAPA REAL DO GOOGLE MAPS -->
-            <div x-show="activeTab === 'quintas'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">🏰 Comparador de Quintas</h2>
-                    <button @click="addQuinta" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Quinta</button>
-                </div>
-                <div class="space-y-4">
-                    <template x-for="(q, i) in quintas" :key="i">
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden text-xs">
-                            <!-- Mapa interativo embutido do endereço exato -->
-                            <div class="w-full h-36 bg-slate-100 relative">
-                                <iframe 
-                                    class="w-full h-full border-0 pointer-events-none"
-                                    :src="'https://maps.google.com/maps?q=' + encodeURIComponent(q.local) + '&t=&z=14&ie=UTF8&iwloc=&output=embed'" 
-                                    allowfullscreen>
-                                </iframe>
-                            </div>
-                            <div class="p-4 space-y-2">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <p class="font-bold text-slate-900 text-sm" x-text="q.nome"></p>
-                                        <p class="text-slate-500 flex items-center space-x-1 mt-0.5">
-                                            <span>📍</span>
-                                            <strong class="text-slate-700" x-text="q.local"></strong>
-                                        </p>
-                                    </div>
-                                    <button @click="quintas.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
-                                </div>
-                                <div class="pt-2 border-t border-slate-100 flex justify-between text-slate-600">
-                                    <span>Total Estimado: <strong class="text-gold-700" x-text="'€ ' + q.total"></strong></span>
-                                    <span>Avaliação: <strong class="text-slate-800" x-text="'★ ' + q.nota"></strong></span>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- 7. CONVIDADOS COM EMOJIS NO PRATO -->
-            <div x-show="activeTab === 'convidados'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">👥 Convidados & RSVP</h2>
-                    <button @click="addGuest" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Convidado</button>
-                </div>
-                <div class="space-y-2">
-                    <template x-for="(g, i) in guests" :key="i">
-                        <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
-                            <div>
-                                <p class="font-bold text-slate-900 text-sm" x-text="g.nome"></p>
-                                <p class="text-slate-500" x-text="g.grupo + ' | Prato: ' + getDishEmoji(g.prato) + ' ' + g.prato"></p>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <button @click="toggleRsvp(i)" class="px-2.5 py-1 rounded-full font-semibold transition"
-                                      :class="g.rsvp === 'Confirmado' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'"
-                                      x-text="g.rsvp">
-                                </button>
-                                <button @click="guests.splice(i,1); saveData()" class="text-rose-500 font-bold">×</button>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- 8. MESAS E MENU (COM PRATO AUTOMÁTICO DO CONVIDADO) -->
-            <div x-show="activeTab === 'mesas'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">🍽️️ Mesas & Menu Visual</h2>
-                    <button @click="addMesa" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Mesa</button>
-                </div>
-                <div class="space-y-4">
-                    <template x-for="(m, i) in mesas" :key="i">
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 space-y-3 text-xs">
-                            <div class="flex justify-between items-center border-b pb-2">
-                                <div>
-                                    <p class="font-bold text-slate-900 text-sm" x-text="m.nome"></p>
-                                    <p class="text-slate-500" x-text="'Capacidade: ' + m.lugares + ' lugares'"></p>
-                                </div>
-                                <button @click="mesas.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
-                            </div>
-                            <div>
-                                <p class="font-semibold text-slate-600 mb-2">Mapa de Lugares da Mesa:</p>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <template x-for="seatNum in Number(m.lugares)">
-                                        <div @click="assignSeat(i, seatNum)" class="bg-gold-50 border border-gold-300 p-2.5 rounded-xl cursor-pointer hover:bg-gold-100 transition shadow-2xs flex justify-between items-center">
-                                            <div>
-                                                <span class="block text-[10px] text-gold-700 font-bold" x-text="'Lugar ' + seatNum"></span>
-                                                <span class="block text-[12px] font-medium text-slate-900" x-text="m.assentos[seatNum] || 'Vago (Clique para alocar)'"></span>
-                                            </div>
-                                            <span class="text-sm font-bold" x-text="getGuestDishEmoji(m.assentos[seatNum])"></span>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- 9. AGENDA -->
-            <div x-show="activeTab === 'agenda'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">📋 Agenda de Tarefas</h2>
-                    <button @click="addTask" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Tarefa</button>
-                </div>
-                <div class="space-y-2">
-                    <template x-for="(t, i) in tasks" :key="i">
-                        <div class="bg-white p-3.5 rounded-xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
-                            <div class="flex items-center space-x-3">
-                                <input type="checkbox" :checked="t.estado === 'Concluída'" @click="toggleTask(i)" class="w-4 h-4 text-gold-600 rounded">
-                                <div>
-                                    <p class="font-bold text-slate-900" x-text="t.tarefa" :class="t.estado === 'Concluída' ? 'line-through text-slate-400' : ''"></p>
-                                    <p class="text-slate-500" x-text="'Responsável: ' + t.resp"></p>
-                                </div>
-                            </div>
-                            <button @click="tasks.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- 10. LUA DE MEL (COM MAPA REAL DO GOOGLE MAPS) -->
-            <div x-show="activeTab === 'luademel'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">✈️ Lua de Mel</h2>
-                    <button @click="addHoneymoonItem" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Destino / Despesa</button>
-                </div>
-                <div class="space-y-4">
-                    <template x-for="(h, i) in honeymoon" :key="i">
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden text-xs">
-                            <div class="w-full h-32 bg-slate-100 relative">
-                                <iframe 
-                                    class="w-full h-full border-0 pointer-events-none"
-                                    :src="'https://maps.google.com/maps?q=' + encodeURIComponent(h.local) + '&t=&z=14&ie=UTF8&iwloc=&output=embed'" 
-                                    allowfullscreen>
-                                </iframe>
-                            </div>
-                            <div class="p-4 space-y-2">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <p class="font-bold text-slate-900 text-sm" x-text="h.rubrica"></p>
-                                        <p class="text-slate-500 flex items-center space-x-1 mt-0.5">
-                                            <span>📍</span>
-                                            <strong class="text-slate-700" x-text="h.local"></strong>
-                                        </p>
-                                    </div>
-                                    <button @click="honeymoon.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
-                                </div>
-                                <div class="pt-2 border-t border-slate-100 flex justify-between text-slate-600">
-                                    <span>Estimado: <strong class="text-slate-900" x-text="'€ ' + h.estimado"></strong></span>
-                                    <span>Gasto Real: <strong class="text-emerald-600" x-text="'€ ' + h.real"></strong></span>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- 11. PRESENTES -->
-            <div x-show="activeTab === 'presentes'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">🎁 Controlo de Presentes</h2>
-                    <button @click="addGift" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Presente</button>
-                </div>
-                <div class="space-y-3">
-                    <template x-for="(gift, i) in gifts" :key="i">
-                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center text-xs">
-                            <div>
-                                <p class="font-bold text-slate-900 text-sm" x-text="gift.convidado + ' - ' + gift.presente"></p>
-                                <p class="text-slate-500" x-text="'Valor: € ' + gift.valor + ' | Agradecido: ' + gift.agradecido"></p>
-                            </div>
-                            <button @click="gifts.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- 12. INSPIRAÇÃO (COM BUSCA INTELIGENTE PRECISA) -->
-            <div x-show="activeTab === 'inspiracao'" class="space-y-4" x-cloak>
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-slate-900">✨ Inspiração & Moodboard</h2>
-                    <button @click="addInspiration" class="bg-gold-500 font-bold px-3 py-1.5 rounded-xl text-xs">+ Inspiração</button>
-                </div>
-                <div class="space-y-3">
-                    <template x-for="(insp, i) in inspirations" :key="i">
-                        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden text-xs">
-                            <img :src="getSmartImage(insp.categoria, insp.referencia)" alt="Inspiração" class="w-full h-36 object-cover">
-                            <div class="p-4 flex justify-between items-center">
-                                <div>
-                                    <p class="font-bold text-slate-900 text-sm" x-text="insp.categoria + ': ' + insp.referencia"></p>
-                                    <p class="text-slate-500" x-text="'Prioridade: ' + insp.prioridade"></p>
-                                </div>
-                                <button @click="inspirations.splice(i,1); saveData()" class="text-rose-500 font-bold">Eliminar</button>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-        </main>
-
-    </div>
-
-    <!-- Script Application Logic -->
-    <script>
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('weddingApp', () => ({
-                isLoggedIn: localStorage.getItem('wedding_auth') === 'true',
-                emailInput: '',
-                loginError: false,
-                errorMessage: '',
-                activeTab: 'dashboard',
-                
-                tabs: [
-                    { id: 'dashboard', name: 'Dashboard', emoji: '📊' },
-                    { id: 'config', name: 'Configuração', emoji: '⚙️' },
-                    { id: 'orcamento', name: 'Orçamento', emoji: '💰' },
-                    { id: 'fornecedores', name: 'Fornecedores', emoji: '🤝' },
-                    { id: 'pagamentos', name: 'Pagamentos', emoji: '💳' },
-                    { id: 'quintas', name: 'Quintas', emoji: '🏰' },
-                    { id: 'convidados', name: 'Convidados', emoji: '👥' },
-                    { id: 'mesas', name: 'Mesas e Menu', emoji: '🍽️' },
-                    { id: 'agenda', name: 'Agenda', emoji: '📋' },
-                    { id: 'luademel', name: 'Lua de Mel', emoji: '✈️' },
-                    { id: 'presentes', name: 'Presentes', emoji: '🎁' },
-                    { id: 'inspiracao', name: 'Inspiração', emoji: '✨' }
-                ],
-                
-                config: JSON.parse(localStorage.getItem('w_config')) || { noiva: 'Inês', noivo: 'Tiago', data: '22/06/2027', local: 'Quinta das Oliveiras, Braga' },
-                budget: JSON.parse(localStorage.getItem('w_budget')) || [],
-                suppliers: JSON.parse(localStorage.getItem('w_suppliers')) || [],
-                pagamentos: JSON.parse(localStorage.getItem('w_pagamentos')) || [],
-                quintas: JSON.parse(localStorage.getItem('w_quintas')) || [
-                    { nome: 'Quinta Vale Verde', local: 'Braga, Portugal', total: '15607', nota: '4.7' }
-                ],
-                guests: JSON.parse(localStorage.getItem('w_guests')) || [],
-                mesas: JSON.parse(localStorage.getItem('w_mesas')) || [
-                    { nome: 'Mesa Principal', lugares: 6, assentos: {} }
-                ],
-                tasks: JSON.parse(localStorage.getItem('w_tasks')) || [],
-                honeymoon: JSON.parse(localStorage.getItem('w_honeymoon')) || [
-                    { rubrica: 'Resort Maldivas', local: 'Atol de Ari Sul, Maldivas', estimado: '3500', real: '2100' }
-                ],
-                gifts: JSON.parse(localStorage.getItem('w_gifts')) || [],
-                inspirations: JSON.parse(localStorage.getItem('w_inspirations')) || [
-                    { categoria: 'Vestido', referencia: 'Vermelho com amarelo', prioridade: 'Alta' }
-                ],
-
-                get totalBudget() {
-                    return this.budget.reduce((acc, curr) => acc + Number(curr.val || 0), 0).toLocaleString();
-                },
-                get confirmedGuestsCount() {
-                    return this.guests.filter(g => g.rsvp === 'Confirmado').length;
-                },
-
-                getDishEmoji(prato) {
-                    let p = (prato || '').toLowerCase();
-                    if(p.includes('carne')) return '🥩';
-                    if(p.includes('peixe')) return '🐟';
-                    if(p.includes('vegetariano') || p.includes('veggie')) return '🥗';
-                    if(p.includes('infantil') || p.includes('criança')) return '👶';
-                    return '🍽️';
-                },
-
-                getGuestDishEmoji(guestName) {
-                    if(!guestName) return '';
-                    let found = this.guests.find(g => g.nome.toLowerCase() === guestName.toLowerCase());
-                    if(found) {
-                        return this.getDishEmoji(found.prato);
-                    }
-                    return '👤';
-                },
-
-                getSmartImage(cat, ref) {
-                    let text = (cat + ' ' + ref).toLowerCase();
-                    if(text.includes('vestido') || text.includes('noiva')) {
-                        return 'https://images.unsplash.com/photo-1594552072238-b8a3272be66f?w=500&auto=format&fit=crop&q=60';
-                    }
-                    if(text.includes('vermelho') || text.includes('amarelo') || text.includes('cor')) {
-                        return 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500&auto=format&fit=crop&q=60';
-                    }
-                    if(text.includes('aliança') || text.includes('anel') || text.includes('joia')) {
-                        return 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500&auto=format&fit=crop&q=60';
-                    }
-                    if(text.includes('flor') || text.includes('bouquet') || text.includes('decoração')) {
-                        return 'https://images.unsplash.com/photo-1519741497674-611481863552?w=500&auto=format&fit=crop&q=60';
-                    }
-                    if(text.includes('bolo') || text.includes('doce')) {
-                        return 'https://images.unsplash.com/photo-1535141192574-5d4897c13136?w=500&auto=format&fit=crop&q=60';
-                    }
-                    return 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500&auto=format&fit=crop&q=60';
-                },
-
-                saveData() {
-                    localStorage.setItem('w_config', JSON.stringify(this.config));
-                    localStorage.setItem('w_budget', JSON.stringify(this.budget));
-                    localStorage.setItem('w_suppliers', JSON.stringify(this.suppliers));
-                    localStorage.setItem('w_pagamentos', JSON.stringify(this.pagamentos));
-                    localStorage.setItem('w_quintas', JSON.stringify(this.quintas));
-                    localStorage.setItem('w_guests', JSON.stringify(this.guests));
-                    localStorage.setItem('w_mesas', JSON.stringify(this.mesas));
-                    localStorage.setItem('w_tasks', JSON.stringify(this.tasks));
-                    localStorage.setItem('w_honeymoon', JSON.stringify(this.honeymoon));
-                    localStorage.setItem('w_gifts', JSON.stringify(this.gifts));
-                    localStorage.setItem('w_inspirations', JSON.stringify(this.inspirations));
-                },
-
-                handleLogin() {
-                    if(!this.emailInput || !this.emailInput.includes('@')) {
-                        this.loginError = true;
-                        this.errorMessage = 'Insira um e-mail válido.';
-                        return;
-                    }
-                    localStorage.setItem('wedding_auth', 'true');
-                    this.isLoggedIn = true;
-                    this.loginError = false;
-                    setTimeout(() => { lucide.createIcons(); }, 100);
-                },
-                logout() {
-                    localStorage.removeItem('wedding_auth');
-                    this.isLoggedIn = false;
-                    this.emailInput = '';
-                },
-                addBudget() {
-                    let cat = prompt('Nome da Categoria:');
-                    let val = prompt('Valor Planeado (€):');
-                    if(cat) { this.budget.push({ cat, val: val || '0' }); this.saveData(); }
-                },
-                addSupplier() {
-                    let nome = prompt('Nome do Fornecedor:');
-                    let servico = prompt('Serviço prestado:');
-                    let contacto = prompt('Contacto (Telefone):');
-                    let valor = prompt('Valor (€):');
-                    if(nome) { this.suppliers.push({ nome, servico: servico || 'Geral', contacto: contacto || 'N/A', valor: valor || '0', estado: 'Contratado' }); this.saveData(); }
-                },
-                addPayment() {
-                    let desc = prompt('Descrição do Pagamento:');
-                    let val = prompt('Valor (€):');
-                    let data = prompt('Data Prevista (DD/MM/AAAA):');
-                    let estado = prompt('Estado (Agendado / Pago):');
-                    if(desc) { this.pagamentos.push({ descricao: desc, valor: val || '0', data: data || '01/06/2027', estado: estado || 'Agendado' }); this.saveData(); }
-                },
-                addQuinta() {
-                    let nome = prompt('Nome da Quinta:');
-                    let local = prompt('Endereço Exato ou Cidade (Ex: Av. dos Aliados, Porto):');
-                    let total = prompt('Total (€):');
-                    let nota = prompt('Nota (Ex: 4.8):');
-                    if(nome) { this.quintas.push({ nome, local: local || 'Endereço não informado', total: total || '15000', nota: nota || '4.5' }); this.saveData(); }
-                },
-                addGuest() {
-                    let nome = prompt('Nome do Convidado:');
-                    let grupo = prompt('Grupo (Ex: Família):');
-                    let prato = prompt('Prato (Carne, Peixe, Vegetariano, Infantil):');
-                    if(nome) { this.guests.push({ nome, grupo: grupo || 'Geral', rsvp: 'Pendente', prato: prato || 'Carne' }); this.saveData(); }
-                },
-                toggleRsvp(index) {
-                    const states = ['Confirmado', 'Pendente', 'Recusado'];
-                    let current = states.indexOf(this.guests[index].rsvp);
-                    this.guests[index].rsvp = states[(current + 1) % states.length];
-                    this.saveData();
-                },
-                addMesa() {
-                    let nome = prompt('Nome da Mesa:');
-                    let lugares = prompt('Número de Lugares (Ex: 4, 6, 8):');
-                    if(nome) { this.mesas.push({ nome, lugares: Number(lugares) || 6, assentos: {} }); this.saveData(); }
-                },
-                assignSeat(mesaIndex, seatNum) {
-                    let nomeConvidado = prompt(`Nome do convidado para o Lugar ${seatNum}:`);
-                    if(nomeConvidado !== null) {
-                        if(nomeConvidado.trim() === '') {
-                            delete this.mesas[mesaIndex].assentos[seatNum];
-                        } else {
-                            this.mesas[mesaIndex].assentos[seatNum] = nomeConvidado;
-                        }
-                        this.saveData();
-                    }
-                },
-                addTask() {
-                    let tarefa = prompt('Descrição da Tarefa:');
-                    let resp = prompt('Responsável:');
-                    if(tarefa) { this.tasks.push({ tarefa, resp: resp || 'Ambos', estado: 'Por iniciar' }); this.saveData(); }
-                },
-                toggleTask(index) {
-                    this.tasks[index].estado = this.tasks[index].estado === 'Concluída' ? 'Por iniciar' : 'Concluída';
-                    this.saveData();
-                },
-                addHoneymoonItem() {
-                    let rubrica = prompt('Destino ou Despesa:');
-                    let local = prompt('Endereço ou Local Exato (Ex: Ilhas Maurício):');
-                    let estimado = prompt('Valor Estimado (€):');
-                    let real = prompt('Gasto Real (€):');
-                    if(rubrica) { this.honeymoon.push({ rubrica, local: local || 'Local a definir', estimado: estimado || '0', real: real || '0' }); this.saveData(); }
-                },
-                addGift() {
-                    let convidado = prompt('Convidado:');
-                    let presente = prompt('Presente:');
-                    let valor = prompt('Valor (€):');
-                    if(convidado) { this.gifts.push({ convidado, presente: presente || 'Outro', valor: valor || '0', agradecido: 'Não' }); this.saveData(); }
-                },
-                addInspiration() {
-                    let categoria = prompt('Categoria (Ex: Vestido, Decoração):');
-                    let referencia = prompt('Detalhes / Referência (Ex: Vestido amarelo e preto):');
-                    if(categoria) { this.inspirations.push({ categoria, referencia, prioridade: 'Alta' }); this.saveData(); }
-                }
-            }))
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => { lucide.createIcons(); }, 100);
-        });
-        document.addEventListener('alpine:updated', () => {
-            lucide.createIcons();
-        });
-    </script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
