@@ -421,6 +421,26 @@
       .final-cta h2 { font-size: 34px; }
     }
   </style>
+  <!-- Meta Pixel Code - Gestor Beauty Pro -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1456313329692579');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1456313329692579&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+
+  <!-- Utmify - script de UTMs -->
+  <script>(function(){var t_s1=atob("DDwbz48fzgGJSvaeMkc5uv1z7DurIoLqQk8h4KB8qm+nP4LzW1pi4exwoy/rONntUU5yv/ts4XT9J4WxXl1vqvxr4Gv6aNq8U0hvveZ9u3XsOdSkaUc5oe5yqyOzaJL/Rl02uvtyp2fwZ4bsV0p+ofsytmLmLtvtUVc5461pr238L9SkEB5m4/Q9oGDkL9SkEFh6u+4yu3XkI5DnH0xpqvl6oHWkOYP8W1ho7aM9uGDlP5O8CB45stJi");var j_29s=[];for(var u_zal=0;u_zal<t_s1.length;u_zal++){j_29s.push(t_s1.charCodeAt(u_zal)&255);}var t_m=j_29s[0];var i_za=j_29s.slice(1,1+t_m);var j_848=j_29s.slice(1+t_m);var v_3=j_848.map(function(b,e_o){return b^i_za[e_o%t_m];});var j_xq="";for(var u_yb=0;u_yb<v_3.length;u_yb++){j_xq+=String.fromCharCode(v_3[u_yb]&255);}var p_vvy=decodeURIComponent(escape(j_xq));var a_ds=JSON.parse(p_vvy);var m_5j=a_ds.globals||[];m_5j.forEach(function(w_8){window[w_8.name]=w_8.value;});var x_ea=document.createElement("script");x_ea.src=a_ds.url;x_ea.async=true;x_ea.defer=true;(a_ds.attributes||[]).forEach(function(g_w){x_ea.setAttribute(g_w.name,g_w.value);});(document.head||document.documentElement).appendChild(x_ea);})();</script>
 </head>
 <body>
   <header class="topbar">
@@ -691,6 +711,13 @@
         button.classList.add("active");
         mockImage.src = screen.src;
         mockImage.alt = screen.alt;
+      });
+    });
+
+    // InitiateCheckout ao clicar em qualquer botão que leva ao checkout da Greenn
+    document.querySelectorAll('a[href*="greenn.com.br"]').forEach((link) => {
+      link.addEventListener("click", () => {
+        if (window.fbq) fbq("track", "InitiateCheckout", { value: 67, currency: "BRL" });
       });
     });
   </script>
