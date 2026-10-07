@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gestor Beauty Pro | Sistema para profissionais da beleza</title>
+  <meta name="description" content="Organize agenda, clientes, caixa e WhatsApp do seu salão em um sistema simples, bonito e pronto para usar, sem mensalidade." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232d252b'/%3E%3Ccircle cx='32' cy='32' r='21' fill='%23e2ac4f'/%3E%3Cpath d='M22 39c10-2 17-9 20-20 2 11-3 22-20 20Zm9-19c4 2 8 6 10 10-5-1-9-4-10-10Z' fill='%232d252b'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --ink: #191116;
+      --muted: #6f6069;
+      --cream: #fff8f6;
+      --paper: #ffffff;
+      --rose: #b76272;
+      --rose-dark: #6c3442;
+      --wine: #2d252b;
+      --gold: #e2ac4f;
+      --line: #ead6d9;
+      --green: #219653;
+      --shadow: 0 20px 60px rgba(72, 36, 45, .14);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--cream);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    .wrap { width: min(1120px, calc(100% - 36px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 248, 246, .88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(234, 214, 217, .75);
+    }
+
+    .nav {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      letter-spacing: .01em;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--gold);
+      color: var(--wine);
+      font-weight: 900;
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 999px;
+      border: 0;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: var(--rose);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(183, 98, 114, .28);
+    }
+    .btn-dark { background: var(--wine); color: #fff; }
+    .btn-light {
+      background: #fff;
+      color: var(--wine);
+      border: 1px solid var(--line);
+    }
+
+    .hero {
+      padding: 58px 0 42px;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 42px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--rose-dark);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      line-height: 1.02;
+    }
+
+    h1 { font-size: clamp(40px, 6vw, 72px); }
+    h2 { font-size: clamp(32px, 4.5vw, 52px); }
+    h3 { font-size: 24px; }
+
+    .lead {
+      margin: 20px 0 0;
+      font-size: 20px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .trust {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .trust span { display: inline-flex; gap: 6px; align-items: center; }
+    .hero-card {
+      position: relative;
+      padding: 16px;
+      border-radius: 28px;
+      background: linear-gradient(145deg, #fff, #fff0f1);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .screen-frame {
+      overflow: hidden;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .screen-frame img {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: left top;
+    }
+
+    .floating-price {
+      position: absolute;
+      right: -8px;
+      bottom: 24px;
+      max-width: 210px;
+      padding: 16px;
+      border-radius: 20px;
+      background: var(--wine);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .floating-price strong {
+      display: block;
+      color: var(--gold);
+      font-size: 34px;
+      line-height: 1;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .section { padding: 64px 0; }
+    .section.alt { background: #fff; }
+
+    .center {
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto 34px;
+    }
+
+    .center p, .section-copy {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .pain-grid, .feature-grid, .bonus-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .pain, .feature, .bonus, .faq-item {
+      padding: 24px;
+      border-radius: 18px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 34px rgba(72, 36, 45, .06);
+    }
+
+    .pain strong, .feature strong, .bonus strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .pain p, .feature p, .bonus p, .faq-item p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .mockups {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .mockups .screen-frame { box-shadow: var(--shadow); }
+    .mockups .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .mockups .stack .screen-frame img {
+      aspect-ratio: 16 / 7.4;
+    }
+
+    .included {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 34px;
+      align-items: start;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .checklist b { color: var(--ink); }
+    .tick {
+      flex: 0 0 24px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(33, 150, 83, .12);
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .offer {
+      background: radial-gradient(circle at top left, rgba(226, 172, 79, .22), transparent 32%), linear-gradient(145deg, #342830, #5a313b);
+      color: #fff;
+      border-radius: 28px;
+      padding: clamp(28px, 5vw, 48px);
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 32px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .offer p { color: rgba(255,255,255,.78); }
+    .price-card {
+      padding: 26px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.96);
+      color: var(--ink);
+    }
+
+    .old-price {
+      color: var(--muted);
+      text-decoration: line-through;
+      font-weight: 700;
+    }
+
+    .new-price {
+      margin: 4px 0 12px;
+      color: var(--rose-dark);
+      font-size: clamp(46px, 6vw, 64px);
+      line-height: 1;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 800;
+    }
+
+    .small { color: var(--muted); font-size: 14px; line-height: 1.45; }
+
+    .faq {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    footer {
+      padding: 34px 0;
+      background: var(--wine);
+      color: rgba(255,255,255,.72);
+      font-size: 14px;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .navlinks { display: none; }
+      .hero-grid, .included, .offer, .mockups { grid-template-columns: 1fr; }
+      .pain-grid, .feature-grid, .bonus-grid, .faq { grid-template-columns: 1fr; }
+      .floating-price { position: static; max-width: none; margin-top: 12px; }
+      .section { padding: 46px 0; }
+    }
+
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 24px, 1120px); }
+      .hero { padding-top: 34px; }
+      .lead { font-size: 17px; }
+      .btn { width: 100%; }
+      .trust { display: grid; gap: 8px; }
+      .pain, .feature, .bonus, .faq-item { padding: 20px; }
+      .mockups .stack .screen-frame img,
+      .screen-frame img {
+        aspect-ratio: 4 / 3;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="wrap nav" aria-label="Navegação principal">
+      <a class="brand" href="#top" aria-label="Gestor Beauty Pro">
+        <span class="mark">✦</span>
+        <span>Gestor <span style="color: var(--gold)">Beauty Pro</span></span>
+      </a>
+      <div class="navlinks" aria-hidden="true">
+        <a href="#entregaveis">O que recebe</a>
+        <a href="#funciona">Como funciona</a>
+        <a href="#preco">Preço</a>
+        <a href="#duvidas">Dúvidas</a>
+      </div>
+      <a class="btn btn-primary" href="https://go.greenn.com.br/SEU-LINK-AQUI">Quero organizar meu salão</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Sistema pronto para profissionais da beleza</div>
+          <h1>Agenda, clientes, caixa e WhatsApp em um só lugar.</h1>
+          <p class="lead">Organize seu salão pelo celular com um sistema simples, bonito e pronto para usar, sem mensalidade e sem precisar entender de tecnologia.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://go.greenn.com.br/SEU-LINK-AQUI">Quero meu sistema agora</a>
+            <a class="btn btn-light" href="#entregaveis">Ver o que vem incluso</a>
+          </div>
+          <div class="trust">
+            <span>✓ Pagamento único</span>
+            <span>✓ Acesso vitalício</span>
+            <span>✓ Garantia de 7 dias</span>
+          </div>
+        </div>
+
+        <div class="hero-card" aria-label="Prévia do sistema">
+          <div class="screen-frame">
+            <img src="upload/image(20261007-050915).png" alt="Dashboard do Gestor Beauty Pro com faturamento, clientes e próximos horários" />
+          </div>
+          <div class="floating-price">
+            <span>Oferta de lançamento</span>
+            <strong>R$ 67</strong>
+            <small>Sem mensalidade. Depois o preço sobe.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="center">
+          <h2>Seu atendimento pode ser ótimo, mas a bagunça tira dinheiro do caixa.</h2>
+          <p>Quando agenda, clientes, pagamentos e mensagens ficam espalhados, você perde tempo, esquece retorno e termina o mês sem saber exatamente quanto entrou.</p>
+        </div>
+        <div class="pain-grid">
+          <div class="pain">
+            <strong>Agenda no caderno</strong>
+            <p>Horários riscados, encaixes confusos e risco de marcar duas clientes no mesmo horário.</p>
+          </div>
+          <div class="pain">
+            <strong>WhatsApp cheio</strong>
+            <p>Confirmação, lembrete e retorno de cliente ficam perdidos no meio das conversas.</p>
+          </div>
+          <div class="pain">
+            <strong>Caixa no improviso</strong>
+            <p>Você atende, recebe, paga despesas e depois não sabe o lucro real do mês.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="entregaveis" class="section">
+      <div class="wrap included">
+        <div>
+          <div class="eyebrow">O que você recebe</div>
+          <h2>Um mini sistema completo para rodar sua rotina.</h2>
+          <p class="section-copy">Feito para manicure, cabeleireira, barbeiro, lash designer, esteticista e profissionais autônomas que querem organizar o negócio sem pagar software caro todo mês.</p>
+        </div>
+        <ul class="checklist">
+          <li><span class="tick">✓</span><span><b>Dashboard do salão</b><br />Faturamento do dia, faturamento do mês, atendimentos, clientes e lucro estimado.</span></li>
+          <li><span class="tick">✓</span><span><b>Agenda diária e semanal</b><br />Cadastre horário, serviço, valor e status: agendado, confirmado, concluído ou cancelado.</span></li>
+          <li><span class="tick">✓</span><span><b>Cadastro de clientes</b><br />Telefone, aniversário, observações e botão para chamar direto no WhatsApp.</span></li>
+          <li><span class="tick">✓</span><span><b>Serviços e preços</b><br />Controle preço, duração, custo e lucro estimado de cada atendimento.</span></li>
+          <li><span class="tick">✓</span><span><b>Caixa do negócio</b><br />Entradas, saídas, Pix, dinheiro, cartão e resumo do mês.</span></li>
+          <li><span class="tick">✓</span><span><b>Mensagens prontas</b><br />Confirmação, lembrete, pós-atendimento, aniversário e recuperação de cliente sumida.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="center">
+          <h2>Visual de app, uso simples no celular.</h2>
+          <p>Não é uma planilha feia para você tentar entender. A proposta é abrir, ver sua rotina e tocar no que precisa fazer.</p>
+        </div>
+        <div class="mockups">
+          <div class="screen-frame">
+            <img src="upload/image(20261007-050938).png" alt="Tela de agenda com horários, status e botão de WhatsApp" />
+          </div>
+          <div class="stack">
+            <div class="screen-frame">
+              <img src="upload/image(20261007-050954).png" alt="Tela de clientes cadastrados" />
+            </div>
+            <div class="screen-frame">
+              <img src="upload/image(20261007-051024).png" alt="Tela de caixa com entradas e saídas" />
+            </div>
+          </div>
+        </div>
+        <div class="mockups" style="margin-top: 18px">
+          <div class="screen-frame">
+            <img src="upload/image(20261007-051010).png" alt="Tela de serviços com preço, custo e lucro estimado" />
+          </div>
+          <div class="screen-frame">
+            <img src="upload/image(20261007-051039).png" alt="Tela de mensagens prontas para enviar pelo WhatsApp" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="funciona" class="section">
+      <div class="wrap">
+        <div class="center">
+          <h2>Como funciona na prática</h2>
+          <p>Você usa o sistema para organizar o dia, confirmar clientes e enxergar o dinheiro entrando.</p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature">
+            <strong>1. Cadastre seus serviços</strong>
+            <p>Coloque preço, duração e custo para saber quanto cada atendimento deixa de lucro.</p>
+          </div>
+          <div class="feature">
+            <strong>2. Marque os horários</strong>
+            <p>Veja quem vem hoje, o valor do atendimento e o status de cada cliente.</p>
+          </div>
+          <div class="feature">
+            <strong>3. Confirme pelo WhatsApp</strong>
+            <p>Toque no botão e envie uma mensagem pronta sem ficar digitando tudo de novo.</p>
+          </div>
+          <div class="feature">
+            <strong>4. Conclua o atendimento</strong>
+            <p>Ao finalizar, o valor entra no caixa e sua visão financeira fica atualizada.</p>
+          </div>
+          <div class="feature">
+            <strong>5. Acompanhe o caixa</strong>
+            <p>Veja entradas, saídas e formas de pagamento para parar de trabalhar no escuro.</p>
+          </div>
+          <div class="feature">
+            <strong>6. Recupere clientes</strong>
+            <p>Use mensagens prontas para chamar quem sumiu e preencher horários vagos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="center">
+          <h2>Bônus de lançamento</h2>
+          <p>Para você colocar o sistema em uso mais rápido e já melhorar o atendimento no WhatsApp.</p>
+        </div>
+        <div class="bonus-grid">
+          <div class="bonus">
+            <strong>Pack de mensagens prontas</strong>
+            <p>Textos para confirmação, lembrete, pós-atendimento, aniversário e reativação.</p>
+          </div>
+          <div class="bonus">
+            <strong>Mini tutorial de uso</strong>
+            <p>Passo a passo direto para configurar serviços, clientes e primeiros horários.</p>
+          </div>
+          <div class="bonus">
+            <strong>Dados de exemplo</strong>
+            <p>O sistema vem preenchido para você entender a lógica antes de cadastrar seus dados.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="preco" class="section">
+      <div class="wrap">
+        <div class="offer">
+          <div>
+            <div class="eyebrow" style="background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.18)">Oferta de validação</div>
+            <h2>Comece a organizar seu salão hoje, sem mensalidade.</h2>
+            <p class="section-copy">Essa é a primeira versão da oferta. O valor é menor porque ainda estamos no lançamento. Depois dos primeiros compradores, o preço pode subir.</p>
+            <ul class="checklist" style="margin-top: 18px">
+              <li><span class="tick">✓</span><span><b>Acesso vitalício</b><br />Pague uma vez e use sem cobrança mensal.</span></li>
+              <li><span class="tick">✓</span><span><b>Compra pela GRENN</b><br />Pagamento seguro e entrega digital após aprovação.</span></li>
+              <li><span class="tick">✓</span><span><b>Garantia de 7 dias</b><br />Se não fizer sentido para sua rotina, você pode solicitar reembolso.</span></li>
+            </ul>
+          </div>
+          <div class="price-card">
+            <span class="old-price">De R$ 197</span>
+            <div class="new-price">R$ 67</div>
+            <p class="small">Preço sugerido para a primeira campanha. Pode testar R$47 se quiser acelerar volume ou R$97 se o criativo mostrar bem o sistema.</p>
+            <a class="btn btn-primary" style="width: 100%; margin-top: 16px" href="https://go.greenn.com.br/SEU-LINK-AQUI">Quero meu sistema agora</a>
+            <p class="small" style="margin-bottom: 0; margin-top: 14px">Acesso digital. Link GRENN será inserido aqui.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="duvidas" class="section alt">
+      <div class="wrap">
+        <div class="center">
+          <h2>Dúvidas rápidas</h2>
+        </div>
+        <div class="faq">
+          <div class="faq-item">
+            <h3>Preciso entender de tecnologia?</h3>
+            <p>Não. A ideia é usar telas simples, botões claros e dados de exemplo para você começar sem complicação.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Funciona no celular?</h3>
+            <p>Sim. A página e o sistema foram pensados para a rotina no celular, principalmente agenda e WhatsApp.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Tem mensalidade?</h3>
+            <p>Não. A oferta é de pagamento único, com acesso ao material entregue digitalmente.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Serve para qual área?</h3>
+            <p>Serve para manicure, cabeleireira, barbearia, lash designer, estética, sobrancelha e atendimentos similares.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap center">
+        <h2>Troque o improviso por uma rotina mais clara.</h2>
+        <p>Agenda organizada, clientes à mão, caixa visível e mensagens prontas para atender melhor sem se perder no dia a dia.</p>
+        <a class="btn btn-dark" href="https://go.greenn.com.br/SEU-LINK-AQUI">Comprar pela GRENN</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Gestor Beauty Pro. Todos os direitos reservados.</span>
+      <span>Contato: contatosag2102@gmail.com</span>
+    </div>
+  </footer>
+</body>
+</html>
