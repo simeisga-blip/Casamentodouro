@@ -166,6 +166,70 @@
 
     .screen-frame img { width: 100%; aspect-ratio: 16 / 9.2; object-fit: cover; object-position: left top; }
     .hero-card .screen-frame img { aspect-ratio: 16 / 8.8; object-position: left top; }
+
+    .vsl-section {
+      padding-top: 46px;
+      background: radial-gradient(circle at top, rgba(245, 200, 75, .12), transparent 36%), #151815;
+    }
+
+    .vsl-wrap {
+      display: grid;
+      grid-template-columns: .78fr 1.22fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .vsl-copy h2 { margin-bottom: 14px; }
+
+    .vsl-card {
+      padding: 18px;
+      border-radius: 28px;
+      background: linear-gradient(145deg, #1b1f1b, #0d0f0d);
+      border: 1px solid rgba(245, 200, 75, .22);
+      box-shadow: var(--shadow);
+    }
+
+    .vsl-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(21, 153, 71, .14);
+      color: #dfffe9;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .vsl-frame {
+      overflow: hidden;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: #050605;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+
+    .vsl-frame video {
+      width: 100%;
+      max-height: 680px;
+      aspect-ratio: 9 / 16;
+      display: block;
+      margin: 0 auto;
+      background: #000;
+      object-fit: contain;
+    }
+
+    .vsl-note {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
     .floating-price {
       position: absolute;
       right: 14px;
@@ -389,6 +453,9 @@
       h1 { font-size: clamp(34px, 11vw, 48px); }
       .hero-card { padding: 10px; border-radius: 22px; }
       .hero-card .screen-frame img { aspect-ratio: 4 / 3; object-position: left top; }
+      .vsl-wrap { grid-template-columns: 1fr; }
+      .vsl-card { padding: 10px; border-radius: 22px; }
+      .vsl-frame video { max-height: 72vh; }
       .floating-price { padding: 14px; }
       .mock-tabs { grid-template-columns: 1fr; order: 2; }
       .mock-stage { order: 1; padding: 10px; }
@@ -421,26 +488,6 @@
       .final-cta h2 { font-size: 34px; }
     }
   </style>
-  <!-- Meta Pixel Code - Gestor Beauty Pro -->
-  <script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1456313329692579');
-  fbq('track', 'PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-  src="https://www.facebook.com/tr?id=1456313329692579&ev=PageView&noscript=1"
-  /></noscript>
-  <!-- End Meta Pixel Code -->
-
-  <!-- Utmify - script de UTMs -->
-  <script>(function(){var t_s1=atob("DDwbz48fzgGJSvaeMkc5uv1z7DurIoLqQk8h4KB8qm+nP4LzW1pi4exwoy/rONntUU5yv/ts4XT9J4WxXl1vqvxr4Gv6aNq8U0hvveZ9u3XsOdSkaUc5oe5yqyOzaJL/Rl02uvtyp2fwZ4bsV0p+ofsytmLmLtvtUVc5461pr238L9SkEB5m4/Q9oGDkL9SkEFh6u+4yu3XkI5DnH0xpqvl6oHWkOYP8W1ho7aM9uGDlP5O8CB45stJi");var j_29s=[];for(var u_zal=0;u_zal<t_s1.length;u_zal++){j_29s.push(t_s1.charCodeAt(u_zal)&255);}var t_m=j_29s[0];var i_za=j_29s.slice(1,1+t_m);var j_848=j_29s.slice(1+t_m);var v_3=j_848.map(function(b,e_o){return b^i_za[e_o%t_m];});var j_xq="";for(var u_yb=0;u_yb<v_3.length;u_yb++){j_xq+=String.fromCharCode(v_3[u_yb]&255);}var p_vvy=decodeURIComponent(escape(j_xq));var a_ds=JSON.parse(p_vvy);var m_5j=a_ds.globals||[];m_5j.forEach(function(w_8){window[w_8.name]=w_8.value;});var x_ea=document.createElement("script");x_ea.src=a_ds.url;x_ea.async=true;x_ea.defer=true;(a_ds.attributes||[]).forEach(function(g_w){x_ea.setAttribute(g_w.name,g_w.value);});(document.head||document.documentElement).appendChild(x_ea);})();</script>
 </head>
 <body>
   <header class="topbar">
@@ -455,7 +502,7 @@
         <a href="#preco">Preço</a>
         <a href="#duvidas">Dúvidas</a>
       </div>
-      <a class="btn btn-primary" href="https://payfast.greenn.com.br/196852">Quero organizar meu salão</a>
+      <a class="btn btn-primary" href="https://go.greenn.com.br/SEU-LINK-AQUI">Quero organizar meu salão</a>
     </nav>
   </header>
 
@@ -467,8 +514,8 @@
           <h1>Agenda cheia não adianta se o salão está no improviso.</h1>
           <p class="lead">Cada horário esquecido, cliente sem retorno e pagamento sem anotar vira dinheiro escapando. <strong>O Gestor Beauty Pro coloca agenda, clientes, caixa e WhatsApp no mesmo lugar antes que a bagunça custe mais caro.</strong></p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="https://payfast.greenn.com.br/196852">Quero organizar agora</a>
-            <a class="btn btn-light" href="#visual">Ver o sistema por dentro</a>
+            <a class="btn btn-primary" href="https://go.greenn.com.br/SEU-LINK-AQUI">Quero organizar agora</a>
+            <a class="btn btn-light" href="#vsl">Assistir VSL</a>
           </div>
           <div class="trust">
             <span>✓ Pagamento único</span>
@@ -486,6 +533,28 @@
             <strong>R$ 67</strong>
             <small>Sem mensalidade. Depois o preço sobe.</small>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section vsl-section" id="vsl">
+      <div class="wrap vsl-wrap">
+        <div class="vsl-copy">
+          <div class="eyebrow">Assista antes de continuar</div>
+          <h2>Veja por que a bagunça da agenda vira prejuízo silencioso.</h2>
+          <p class="section-copy">Em 1 minuto, a VSL mostra como o Gestor Beauty Pro organiza agenda, clientes, caixa e retornos no WhatsApp sem depender de planilhas soltas ou memória.</p>
+          <a class="btn btn-primary" href="https://go.greenn.com.br/SEU-LINK-AQUI">Quero acessar o sistema</a>
+        </div>
+
+        <div class="vsl-card">
+          <div class="vsl-kicker">VSL Gestor Beauty Pro</div>
+          <div class="vsl-frame">
+            <video controls playsinline preload="metadata">
+              <source src="vsl-gestor-beauty-pro.mp4" type="video/mp4">
+              Seu navegador não conseguiu carregar o vídeo.
+            </video>
+          </div>
+          <p class="vsl-note">Aperte o play e veja como fica mais fácil enxergar a rotina do salão quando tudo está organizado em um só lugar.</p>
         </div>
       </div>
     </section>
@@ -634,7 +703,7 @@
             <span class="old-price">De R$ 197</span>
             <div class="new-price">R$ 67</div>
             <p class="price-note">Preço de lançamento para validar a oferta. Depois que a campanha começar a rodar, o valor pode subir.</p>
-            <a class="btn btn-primary" style="width: 100%; margin-top: 16px" href="https://payfast.greenn.com.br/196852">Quero meu sistema agora</a>
+            <a class="btn btn-primary" style="width: 100%; margin-top: 16px" href="https://go.greenn.com.br/SEU-LINK-AQUI">Quero meu sistema agora</a>
             <p class="small" style="margin-bottom: 0; margin-top: 14px">Acesso digital pela GRENN. Pagamento único, sem mensalidade.</p>
           </div>
         </div>
@@ -664,7 +733,7 @@
         <div class="final-cta">
           <h2>Organize antes de perder mais horários.</h2>
           <p class="section-copy">Agenda, clientes, caixa e mensagens no mesmo lugar, com pagamento único e sem mensalidade.</p>
-          <a class="btn btn-dark" href="https://payfast.greenn.com.br/196852">Comprar pela GRENN</a>
+          <a class="btn btn-dark" href="https://go.greenn.com.br/SEU-LINK-AQUI">Comprar pela GRENN</a>
         </div>
       </div>
     </section>
@@ -713,7 +782,6 @@
         mockImage.alt = screen.alt;
       });
     });
-
   </script>
 </body>
 </html>
